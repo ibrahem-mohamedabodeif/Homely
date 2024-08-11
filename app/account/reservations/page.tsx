@@ -1,8 +1,8 @@
+"use client";
 import ReservationCard from "@/components/reservationCard";
-import { createClient } from "@/lib/client";
+import { useUser } from "@/lib/context/authProvider";
 import { getReservations } from "@/lib/functions";
-import { createServerComponentClient } from "@/lib/server";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type RoomDetails = {
   city: string;
@@ -10,7 +10,7 @@ type RoomDetails = {
   country: string;
   roomName: string;
   hostedName: string;
-};
+}[];
 
 interface Room {
   id: string;
@@ -19,37 +19,42 @@ interface Room {
   startDay: string;
   endDay: string;
   roomId: string;
-  rooms: {
-    city: string;
-    image1: string;
-    country: string;
-    roomName: string;
-    hostedName: string;
-  }[];
+  rooms: RoomDetails;
 }
 
-export default async function Page() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function Page() {
+  const user: any = useUser();
+  const [reservationRooms, setReservationRooms] = useState<Room[] | null>(null);
 
-  if (!user) redirect("/signin");
+  useEffect(() => {
+    async function fetchReservations() {
+      if (user?.id) {
+        const reservations = await getReservations(user.id);
+        setReservationRooms(reservations);
+      }
+    }
+    fetchReservations();
+  }, [user]);
 
-  const reservationRooms: Room[] | null = await getReservations(user.id);
+  if (!user) {
+    return (
+      <div className="text-4xl flex justify-center mt-40">Please sign in</div>
+    );
+  }
 
   return (
     <>
-      {!reservationRooms?.length && (
+      {!reservationRooms?.length ? (
         <div className="text-4xl flex justify-center mt-40">
           No reservations yet
         </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-y-10 gap-16 mb-24">
+          {reservationRooms.map((room) => (
+            <ReservationCard room={room} key={room.id} />
+          ))}
+        </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-y-10 gap-16 mb-24">
-        {reservationRooms?.map((room) => (
-          <ReservationCard room={room} key={room.id} />
-        ))}
-      </div>
     </>
   );
 }
