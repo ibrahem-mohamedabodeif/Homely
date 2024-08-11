@@ -3,14 +3,30 @@ import { getReservations } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 
-type reservationRoom = {
-  id: string;
-  totalPrice: number;
-  nights: number;
-  startDay: string;
-  endDay: string;
-  roomId: string;
-  rooms: {
+// type reservationRoom = {
+//   id: string;
+//   totalPrice: number;
+//   nights: number;
+//   startDay: string;
+//   endDay: string;
+//   roomId: string;
+//   rooms: {
+//     city: string;
+//     image1: string;
+//     country: string;
+//     roomName: string;
+//     hostedName: string;
+//   };
+// };
+
+type Room = {
+  id: any;
+  totalPrice?: number;
+  nights?: number;
+  startDay?: string;
+  endDay?: string;
+  roomId?: string;
+  rooms?: {
     city: string;
     image1: string;
     country: string;
@@ -37,25 +53,9 @@ export default async function Page() {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2   justify-center   gap-y-10 gap-16 mb-24">
-        {reservationRooms?.map(
-          (room: {
-            id: any;
-            totalPrice?: number;
-            nights?: number;
-            startDay?: string;
-            endDay?: string;
-            roomId?: string;
-            rooms?: {
-              city: string;
-              image1: string;
-              country: string;
-              roomName: string;
-              hostedName: string;
-            };
-          }) => (
-            <ReservationCard room={room} key={room.id} />
-          )
-        )}
+        {reservationRooms?.map((room: Room) => (
+          <ReservationCard room={room} key={room.id} />
+        ))}
       </div>
     </>
   );
