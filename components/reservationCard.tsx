@@ -21,17 +21,19 @@ import Link from "next/link";
 
 export default function ReservationCard({ room }: any) {
   return (
-    <div className="flex flex-col lg:flex-row justify-center gap-3">
-      <div className="w-56 h-28 mx-auto relative rounded-xl overflow-hidden flex-shrink-0">
+    <div className="flex flex-col lg:flex-row  gap-3">
+      <div className="w-56 h-28 relative rounded-xl overflow-hidden flex-shrink-0">
         <Image
-          src={room?.rooms.image1}
-          alt={room?.rooms.roomName}
-          layout="fill"
-          objectFit="cover"
+          src={room.rooms.image1}
+          alt={room.rooms.roomName}
+          width={500}
+          height={500}
+          // layout="fill"
+          // objectFit="cover"
           className="rounded-xl"
         />
       </div>
-      ?
+
       <div className="flex flex-col justify-between ">
         <div>
           <Link href={`/rooms/${room?.roomId}`}>
