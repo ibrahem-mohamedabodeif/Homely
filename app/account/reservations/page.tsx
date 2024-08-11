@@ -1,4 +1,5 @@
 import ReservationCard from "@/components/reservationCard";
+import { createClient } from "@/lib/client";
 import { getReservations } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
@@ -28,7 +29,7 @@ interface Room {
 }
 
 export default async function Page() {
-  const supabase = createServerComponentClient();
+  const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
