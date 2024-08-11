@@ -27,7 +27,7 @@ export default async function Page() {
 
   if (!user) redirect("/signin");
 
-  const reservationRooms: reservationRoom[] = await getReservations(user.id);
+  const reservationRooms: any = await getReservations(user.id);
 
   return (
     <>
@@ -37,9 +37,25 @@ export default async function Page() {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2   justify-center   gap-y-10 gap-16 mb-24">
-        {reservationRooms?.map((room) => (
-          <ReservationCard room={room} key={room.id} />
-        ))}
+        {reservationRooms?.map(
+          (room: {
+            id: any;
+            totalPrice?: number;
+            nights?: number;
+            startDay?: string;
+            endDay?: string;
+            roomId?: string;
+            rooms?: {
+              city: string;
+              image1: string;
+              country: string;
+              roomName: string;
+              hostedName: string;
+            };
+          }) => (
+            <ReservationCard room={room} key={room.id} />
+          )
+        )}
       </div>
     </>
   );

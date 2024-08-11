@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { ReadonlyURLSearchParams, redirect } from "next/navigation";
 import { createServerComponentClient } from "./server";
 import { revalidatePath } from "next/cache";
 import toast from "react-hot-toast";
@@ -56,7 +56,7 @@ export async function createReservation(bookingData: bookingData, formData: Form
 
 
 
-export async function signIn(searchParams: SearchQuery,formData: FormData) {
+export async function signIn(searchParams:any,formData: FormData) {
   const supabase = createServerComponentClient();
 
   const email = formData.get("email") as string;
@@ -80,7 +80,7 @@ revalidatePath("/")
   redirect(redirectUrl);
 }
 
-export async function signUp( searchParams: SearchQuery,formData: FormData) {
+export async function signUp( searchParams:any,formData: FormData) {
    const supabase = createServerComponentClient();
 
   const email = formData.get("email") as string

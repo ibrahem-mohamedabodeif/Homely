@@ -1,26 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type reservationRooms = {
-  room: {
-    id: string;
-    totalPrice: number;
-    nights: number;
-    startDay: string;
-    endDay: string;
-    roomId: string;
-    rooms: {
-      city: string;
-      image1: string;
-      country: string;
-      roomName: string;
-      hostedName: string;
-      price: number;
-    };
-  };
-};
+// type reservationRooms = {
+//   room: {
+//     id: string;
+//     totalPrice: number;
+//     nights: number;
+//     startDay: string;
+//     endDay: string;
+//     roomId: string;
+//     rooms: {
+//       city: string;
+//       image1: string;
+//       country: string;
+//       roomName: string;
+//       hostedName: string;
+//       price: number;
+//     };
+//   };
+// };
 
-export default function WishListCard({ room }: reservationRooms) {
+export default function WishListCard({ room }: any) {
   return (
     <div className="flex flex-col lg:flex-row justify-center gap-3">
       <div className="w-56 h-28 mx-auto relative rounded-xl overflow-hidden flex-shrink-0">

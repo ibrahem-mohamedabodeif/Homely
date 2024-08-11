@@ -6,7 +6,10 @@ import { getAllRooms, getFilterRooms, getRoomsBySearch } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 
 type searchType = {
-  [key: string]: any;
+  searchParams: {
+    type: string;
+    country: string;
+  };
 };
 
 export default async function Home({ searchParams }: searchType) {

@@ -3,7 +3,7 @@
 import { addWishRoom } from "@/lib/functions";
 import toast from "react-hot-toast";
 
-export default function SaveButton({ roomId, userId, children }) {
+export default function SaveButton({ roomId, userId, children }: any) {
   const handleClick = () => {
     try {
       addWishRoom(roomId, userId);

@@ -6,7 +6,7 @@ import MegaMenu from "./megaMenu";
 import { useUser } from "@/lib/context/authProvider";
 
 export default function AccountBar() {
-  const user = useUser();
+  const user: any = useUser();
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">

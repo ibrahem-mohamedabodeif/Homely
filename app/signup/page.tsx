@@ -8,9 +8,8 @@ import { useSearchParams } from "next/navigation";
 
 export default function Page() {
   const searchParams = useSearchParams();
-  const searchQuery = Object.fromEntries(searchParams.entries());
 
-  const signUpWithSearchQuery = signUp.bind(searchQuery);
+  const signUpWithSearchQuery = signUp.bind(null, searchParams);
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -97,8 +96,8 @@ export default function Page() {
           Have an account?{" "}
           <Link
             href={
-              searchQuery
-                ? `/signin?${new URLSearchParams(searchQuery).toString()}`
+              searchParams
+                ? `/signin?${new URLSearchParams(searchParams).toString()}`
                 : "/signin"
             }
             className="text-lg font-semibold leading-6 text-indigo-600 hover:text-indigo-500"

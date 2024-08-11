@@ -28,14 +28,31 @@ export default async function Page() {
 
   if (!user) redirect("/signin");
 
-  const wishRooms: wishRoom[] = await getWishRooms(user.id);
+  const wishRooms: any = await getWishRooms(user.id);
 
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20 justify-center  gap-y-10 mb-24">
-        {wishRooms?.map((room) => (
-          <WishListCard room={room} key={room.id} />
-        ))}
+        {wishRooms?.map(
+          (room: {
+            id: any;
+            totalPrice?: number;
+            nights?: number;
+            startDay?: string;
+            endDay?: string;
+            roomId?: string;
+            rooms?: {
+              city: string;
+              image1: string;
+              country: string;
+              roomName: string;
+              hostedName: string;
+              price: number;
+            };
+          }) => (
+            <WishListCard room={room} key={room.id} />
+          )
+        )}
       </div>
     </>
   );
