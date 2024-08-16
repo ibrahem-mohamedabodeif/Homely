@@ -1,20 +1,23 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import MegaMenu from "./megaMenu";
 import { useUser } from "@/lib/context/authProvider";
-export const revalidate = 0;
+import { createServerComponentClient } from "@/lib/server";
 
 export default function AccountBar() {
-  const user: any = useUser();
-  const [open, setOpen] = useState(false);
-  const [userState, setUserState] = useState(user);
-
+  const supabase = createServerComponentClient();
+  const [user, setUser] = useState<any>();
   useEffect(() => {
-    setUserState(user);
-  }, [user]);
+    const {
+      data: { user },
+    }: any = supabase.auth.getUser();
+    if (user) setUser(user);
+  }, [supabase.auth]);
 
+  // const user: any = useUser();
+  const [open, setOpen] = useState(false);
   return (
     <div className="relative">
       <button
@@ -22,9 +25,9 @@ export default function AccountBar() {
         className="flex items-center gap-4 border pt-2 pb-2 pl-5 pr-3 rounded-full hover:shadow"
       >
         <CiMenuBurger size={17} />
-        {userState ? (
+        {user ? (
           <span className=" w-10 p-2 font-bold capitalize text-center border rounded-full bg-black text-white">
-            {userState?.user_metadata?.name[0]}
+            {user?.user_metadata?.name[0]}
           </span>
         ) : (
           <FaUserCircle size={30} />
