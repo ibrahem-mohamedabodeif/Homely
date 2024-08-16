@@ -97,7 +97,9 @@ export async function signUp( previousState:any,formData: FormData) {
   });
 
   if (error) {
-return error.message  }
+    return error.message
+  }
+  revalidatePath("/")
 
   const redirectUrl = searchParams.length
     ? `/reservation?${new URLSearchParams(searchParams).toString()}`
