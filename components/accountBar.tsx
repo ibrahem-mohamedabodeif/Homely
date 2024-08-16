@@ -1,22 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import MegaMenu from "./megaMenu";
 import { useUser } from "@/lib/context/authProvider";
-import { createServerComponentClient } from "@/lib/server";
+export const revalidate = 0;
 
 export default function AccountBar() {
-  const supabase = createServerComponentClient();
-  const [user, setUser] = useState<any>();
-  useEffect(() => {
-    const {
-      data: { user },
-    }: any = supabase.auth.getUser();
-    if (user) setUser(user);
-  }, [supabase.auth]);
-
-  // const user: any = useUser();
+  const user: any = useUser();
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">

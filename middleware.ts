@@ -6,5 +6,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const confiq = {
-    matcher:["/reservations/:path*"]
+    matcher:["/reservations/:path*,/reservations/:path* "]
 }

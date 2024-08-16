@@ -5,7 +5,7 @@ import SearchBar from "./searchBar";
 import AccountBar from "./accountBar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+export const revalidate = 0;
 export default function NavBar() {
   const pathName = usePathname();
   return (

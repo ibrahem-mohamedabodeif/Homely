@@ -10,6 +10,8 @@ import logo from "@/app/icon.ico";
 import Link from "next/link";
 import { useUser } from "@/lib/context/authProvider";
 import { signOut } from "@/lib/actions";
+export const revalidate = 0;
+
 export default function NavBarBottom() {
   const user = useUser();
   return (

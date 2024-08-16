@@ -2,7 +2,7 @@
 
 import {  redirect } from "next/navigation";
 import { createServerComponentClient } from "./server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 
 
@@ -67,8 +67,7 @@ const searchParams = formData.get("searchParams") as string
    return error.message
   }
 
-revalidatePath("/")
-
+revalidateTag("user")
   const redirectUrl = searchParams.length
     ? `/reservation?${new URLSearchParams(searchParams).toString()}`
     : "/";
@@ -99,7 +98,7 @@ export async function signUp( previousState:any,formData: FormData) {
   if (error) {
     return error.message
   }
-  revalidatePath("/")
+revalidateTag("user")
 
   const redirectUrl = searchParams.length
     ? `/reservation?${new URLSearchParams(searchParams).toString()}`
