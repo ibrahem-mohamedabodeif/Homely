@@ -1,7 +1,8 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "../client";
-
+import { revalidatePath } from "next/cache";
+export const revalidate = 0;
 const authContext = createContext(null);
 
 export default function AuthProvider({
@@ -19,6 +20,7 @@ export default function AuthProvider({
       } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
+        revalidatePath("/");
       }
     };
     getUser();

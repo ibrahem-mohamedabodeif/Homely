@@ -3,7 +3,7 @@
 import { useUser } from "@/lib/context/authProvider";
 import { addWishRoom } from "@/lib/functions";
 import toast from "react-hot-toast";
-
+export const revalidate = 0;
 export default function SaveButton({ roomId, children }: any) {
   const user: any = useUser();
 
