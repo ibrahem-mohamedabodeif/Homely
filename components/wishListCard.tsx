@@ -15,7 +15,7 @@ export default function WishListCard({ room }: any) {
       </div>
       <div className="flex flex-col justify-between ">
         <div>
-          <Link href={`/rooms/${room.id}`}>
+          <Link href={`/${room.id}`}>
             <h1 className="capitalize font-semibold text-lg pb-1">
               {room.rooms.roomName}
             </h1>

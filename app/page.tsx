@@ -81,7 +81,7 @@ export default async function Home({ searchParams }: searchType) {
       )}
       <div className="mb-20 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-10 min-[320px]:mx-12 min-[425px]:mx-16 md:mx-16 my-10">
         {filteredRooms?.map((room: any) => (
-          <Link href={`/rooms/${room.id}`} key={room.id}>
+          <Link href={`/${room.id}`} key={room.id}>
             <CardItem room={room} />
           </Link>
         ))}

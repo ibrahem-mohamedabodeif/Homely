@@ -4,7 +4,7 @@ import { CiMenuBurger } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import MegaMenu from "./megaMenu";
 import { useUser } from "@/lib/context/authProvider";
-
+export const revalidate = 0;
 export default function AccountBar() {
   const user: any = useUser();
   const [open, setOpen] = useState(false);

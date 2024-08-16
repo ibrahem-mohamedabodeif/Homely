@@ -2,7 +2,7 @@ import BookCard from "@/components/bookCard";
 import BookForm from "@/components/bookForm";
 import { getReservations, getRoomById } from "@/lib/functions";
 import { FaArrowLeft } from "react-icons/fa";
-import { Room } from "../rooms/[roomId]/page";
+import { Room } from "../[roomId]/page";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/navbar";
