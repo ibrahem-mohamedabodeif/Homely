@@ -1,14 +1,5 @@
 "use client";
-import {
-  Children,
-  createContext,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { createServerComponentClient } from "../server";
+import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "../client";
 
 const authContext = createContext(null);
@@ -42,7 +33,6 @@ export default function AuthProvider({
       }
     );
 
-    // Cleanup subscription on unmount
     return () => {
       authListener?.subscription.unsubscribe();
     };

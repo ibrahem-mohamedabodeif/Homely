@@ -1,13 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
 import SaveButton from "./saveButton";
 import { FaRegHeart } from "react-icons/fa";
 
-export default function CardItem({ room, userId }: any) {
+export default function CardItem({ room }: any) {
   return (
-    <Link href={`/rooms/${room.id}`}>
+    <>
       <div className=" relative w-72 h-72 rounded-xl overflow-hidden">
-        <SaveButton userId={userId} roomId={room.id}>
+        <SaveButton roomId={room.id}>
           {" "}
           <FaRegHeart
             size={23}
@@ -30,6 +29,6 @@ export default function CardItem({ room, userId }: any) {
       </div>
       <span className="text-gray-900 font-semibold">${room.price}</span>{" "}
       <span className="text-gray-600">/ night</span>
-    </Link>
+    </>
   );
 }

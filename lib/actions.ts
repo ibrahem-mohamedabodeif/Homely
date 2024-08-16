@@ -1,13 +1,10 @@
 "use server";
 
-import { ReadonlyURLSearchParams, redirect } from "next/navigation";
+import {  redirect } from "next/navigation";
 import { createServerComponentClient } from "./server";
 import { revalidatePath } from "next/cache";
-import toast from "react-hot-toast";
 
-type SearchQuery =  {
-  [key: string]: string;
-}
+
 
 type bookingData = {
   roomId: string;
@@ -54,13 +51,12 @@ export async function createReservation(bookingData: bookingData, formData: Form
   redirect("/")
 }
 
-
-
-export async function signIn(searchParams:any,formData: FormData) {
+export async function signIn(previousState:any,formData: FormData) {
   const supabase = createServerComponentClient();
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+const searchParams = formData.get("searchParams") as string
 
   const { error } = await supabase.auth.signInWithPassword({
     email: email,
@@ -68,7 +64,7 @@ export async function signIn(searchParams:any,formData: FormData) {
   });
 
   if (error) {
-    throw new Error(error.message);
+   return error.message
   }
 
 revalidatePath("/")
@@ -80,13 +76,15 @@ revalidatePath("/")
   redirect(redirectUrl);
 }
 
-export async function signUp( searchParams:any,formData: FormData) {
+export async function signUp( previousState:any,formData: FormData) {
    const supabase = createServerComponentClient();
 
   const email = formData.get("email") as string
   const password = formData.get("password") as string;
   const name = formData.get("fullName") as string
   const phone = formData.get("phoneNumber")
+  const searchParams = formData.get("searchParams") as string
+
   
   const { error } = await supabase.auth.signUp({
     email: email,
@@ -99,8 +97,7 @@ export async function signUp( searchParams:any,formData: FormData) {
   });
 
   if (error) {
-    throw new Error(error.message);
-  }
+return error.message  }
 
   const redirectUrl = searchParams.length
     ? `/reservation?${new URLSearchParams(searchParams).toString()}`

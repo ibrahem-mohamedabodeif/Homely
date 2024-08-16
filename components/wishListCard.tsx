@@ -1,42 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// type reservationRooms = {
-//   room: {
-//     id: string;
-//     totalPrice: number;
-//     nights: number;
-//     startDay: string;
-//     endDay: string;
-//     roomId: string;
-//     rooms: {
-//       city: string;
-//       image1: string;
-//       country: string;
-//       roomName: string;
-//       hostedName: string;
-//       price: number;
-//     };
-//   };
-// };
-
 export default function WishListCard({ room }: any) {
   return (
-    <div className="flex flex-col lg:flex-row gap-3">
-      <div className="w-56 h-28 mx-auto relative rounded-xl overflow-hidden flex-shrink-0">
+    <div className="max-w-lg flex flex-col lg:flex-row gap-3">
+      <div className="w-56 h-28 relative rounded-xl overflow-hidden flex-shrink-0">
         <Image
           src={room.rooms.image1}
           alt={room.rooms.roomName}
           width={500}
           height={500}
-          // layout="fill"
-          // objectFit="cover"
-          className="rounded-xl"
+          className="rounded-xl object-cover"
         />
       </div>
       <div className="flex flex-col justify-between ">
         <div>
-          <Link href={`/rooms/${room.roomId}`}>
+          <Link href={`/rooms/${room.id}`}>
             <h1 className="capitalize font-semibold text-lg pb-1">
               {room.rooms.roomName}
             </h1>
@@ -49,7 +28,7 @@ export default function WishListCard({ room }: any) {
           Hosted by {room.rooms.hostedName}
         </p>
         <div>
-          <span className="text-gray-600 float-end mt-4">
+          <span className="text-gray-600 float-end mt-2">
             ${room.rooms.price} / night
           </span>
         </div>

@@ -1,15 +1,27 @@
 "use client";
 
+import { useUser } from "@/lib/context/authProvider";
 import { addWishRoom } from "@/lib/functions";
 import toast from "react-hot-toast";
 
-export default function SaveButton({ roomId, userId, children }: any) {
-  const handleClick = () => {
+export default function SaveButton({ roomId, children }: any) {
+  const user: any = useUser();
+
+  const handleClick = async () => {
+    if (!user) {
+      toast.error("Should sign in first");
+      return;
+    }
+
     try {
-      addWishRoom(roomId, userId);
-      toast.success("Add to Wish list");
-    } catch (error) {
-      toast.error("Failed to add it ");
+      const result: any = await addWishRoom(roomId, user.id);
+      if (result?.message) {
+        toast.error(result.message);
+      } else {
+        toast.success("Added to Wishlist");
+      }
+    } catch (error: any) {
+      toast.error(`Failed to add to wishlist`);
     }
   };
 

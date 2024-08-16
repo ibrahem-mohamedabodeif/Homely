@@ -28,11 +28,10 @@ export default function ReservationCard({ room }: any) {
         <p className="text-gray-700 text-sm">
           {room.startDay} -&gt; {room.endDay}
         </p>
-        <div className="flex justify-end">
-          <span className="text-gray-600 text-sm">
-            ${room.totalPrice} / {room.nights} night{room.nights > 1 && "s"}
-          </span>
-        </div>
+
+        <span className="text-gray-600 flex justify-end text-sm">
+          ${room.totalPrice} / {room.nights} night{room.nights > 1 && "s"}
+        </span>
       </div>
     </div>
   );

@@ -3,14 +3,17 @@
 import { signUp } from "@/lib/actions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useFormState } from "react-dom";
 
 export default function SignupForm() {
-  const searchParams = useSearchParams();
+  const searchParams: any = useSearchParams();
+  const [error, formAction, isPending] = useFormState(signUp, null);
 
-  const signUpWithSearchQuery = signUp.bind(null, searchParams);
   return (
     <div>
-      <form action={signUpWithSearchQuery} className="space-y-4">
+      <form action={formAction} className="space-y-4">
+        <input type="hidden" name="searchParams" value={searchParams} />
+
         <div>
           <label className="block text-sm font-medium leading-6 text-gray-900">
             Full Name
@@ -71,7 +74,9 @@ export default function SignupForm() {
             />
           </div>
         </div>
-
+        {error && (
+          <span className="text-red-500 flex justify-center">{error}</span>
+        )}
         <div>
           <button
             type="submit"

@@ -1,8 +1,7 @@
-"use client";
 import ReservationCard from "@/components/reservationCard";
-import { useUser } from "@/lib/context/authProvider";
 import { getReservations } from "@/lib/functions";
-import { useEffect, useState } from "react";
+import { createServerComponentClient } from "@/lib/server";
+import { redirect } from "next/navigation";
 
 type RoomDetails = {
   city: string;
@@ -22,25 +21,15 @@ interface Room {
   rooms: RoomDetails;
 }
 
-export default function Page() {
-  const user: any = useUser();
-  const [reservationRooms, setReservationRooms] = useState<Room[] | null>(null);
+export default async function Page() {
+  const supabase = createServerComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  useEffect(() => {
-    async function fetchReservations() {
-      if (user?.id) {
-        const reservations = await getReservations(user.id);
-        setReservationRooms(reservations);
-      }
-    }
-    fetchReservations();
-  }, [user]);
+  if (!user) redirect("/signin");
 
-  if (!user) {
-    return (
-      <div className="text-4xl flex justify-center mt-40">Please sign in</div>
-    );
-  }
+  const reservationRooms = await getReservations(user.id);
 
   return (
     <>

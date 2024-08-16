@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "@/lib/actions";
+import { useFormState } from "react-dom";
 
 export default function SigninForm() {
-  const searchParams = useSearchParams();
+  const searchParams: any = useSearchParams();
+  const [error, formAction] = useFormState(signIn, null);
 
-  const signInWithSearchQuery = signIn.bind(null, searchParams);
   return (
     <div>
-      <form action={signInWithSearchQuery} className="space-y-6">
+      <form action={formAction} className="space-y-6">
+        <input type="hidden" name="searchParams" value={searchParams} />
         <div>
           <label
             htmlFor="email"
@@ -50,7 +52,9 @@ export default function SigninForm() {
             />
           </div>
         </div>
-
+        {error && (
+          <span className="text-red-500 flex justify-center">{error}</span>
+        )}
         <div>
           <button
             type="submit"

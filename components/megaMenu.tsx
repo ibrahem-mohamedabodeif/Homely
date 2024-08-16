@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function MegaMenu() {
   const user = useUser();
   return (
-    <div className="absolute top-14 right-0 flex flex-col items-start gap-4 border p-4 rounded-lg  bg-white z-10">
+    <div className="absolute right-0 flex flex-col items-start gap-4 border p-4 rounded-lg  bg-white shadow-xl z-10">
       <Link href={"/account/reservations"}>Reservations</Link>
       <Link
         href={"/account/wishlist"}

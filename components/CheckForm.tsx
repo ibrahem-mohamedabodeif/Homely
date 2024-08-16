@@ -19,6 +19,7 @@ type CheckParams = {
 
 export default function CheckForm({ room, searchParams }: CheckParams) {
   const { startDay, endDay, nights } = searchParams;
+  const [numGuests, setNumGuests] = useState("");
   const cleaningFee = 130.19;
   const serviceFee = 118.89;
 
@@ -64,12 +65,18 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
 
         <div className="flex flex-col border p-2 rounded w-full md:w-auto  mb-5">
           <label className="text-gray-200 block mb-1">GUESTS</label>
-          <input
-            type="number"
-            value={room.guests}
-            readOnly
+          <select
+            name="numGuests"
+            id="numGuests"
             className="bg-transparent outline-none text-gray-200 w-full"
-          />
+            onChange={(e) => setNumGuests(e.target.value[0])}
+          >
+            {Array.from({ length: room.guests }, (_, i) => i + 1).map((x) => (
+              <option value={x} key={x} className="text-gray-600">
+                {x} {x === 1 ? "guest" : "guests"}
+              </option>
+            ))}
+          </select>
         </div>
 
         {!startDay && !endDay ? (
@@ -83,9 +90,7 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
           <Link
             href={`/reservation?roomId=${
               room.id
-            }&startDay=${startDay}&endDay=${endDay}&nights=${nights}&guests=${
-              room.guests
-            }&totalPrice=${
+            }&startDay=${startDay}&endDay=${endDay}&nights=${nights}&guests=${numGuests}&totalPrice=${
               room.price * nights
             }&cleaningFee=${cleaningFee}&serviceFee=${serviceFee}`}
           >

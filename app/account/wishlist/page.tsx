@@ -2,24 +2,7 @@ import WishListCard from "@/components/wishListCard";
 import { getWishRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
-
-type wishRoom = {
-  id: string;
-  totalPrice: number;
-  nights: number;
-  startDay: string;
-  endDay: string;
-  roomId: string;
-  rooms: {
-    city: string;
-    image1: string;
-    country: string;
-    roomName: string;
-    hostedName: string;
-    price: number;
-  };
-};
-
+export const revalidate = 0;
 export default async function Page() {
   const supabase = createServerComponentClient();
   const {
@@ -32,28 +15,34 @@ export default async function Page() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-20 justify-center  gap-y-10 mb-24">
-        {wishRooms?.map(
-          (room: {
-            id: any;
-            totalPrice?: number;
-            nights?: number;
-            startDay?: string;
-            endDay?: string;
-            roomId?: string;
-            rooms?: {
-              city: string;
-              image1: string;
-              country: string;
-              roomName: string;
-              hostedName: string;
-              price: number;
-            };
-          }) => (
-            <WishListCard room={room} key={room.id} />
-          )
-        )}
-      </div>
+      {!wishRooms?.length ? (
+        <div className="text-4xl flex justify-center mt-40">
+          Add some rooms to explore oneday ✨.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-y-10 gap-16 mb-24">
+          {wishRooms?.map(
+            (room: {
+              id: any;
+              totalPrice?: number;
+              nights?: number;
+              startDay?: string;
+              endDay?: string;
+              roomId?: string;
+              rooms?: {
+                city: string;
+                image1: string;
+                country: string;
+                roomName: string;
+                hostedName: string;
+                price: number;
+              };
+            }) => (
+              <WishListCard room={room} key={room.id} />
+            )
+          )}
+        </div>
+      )}
     </>
   );
 }
