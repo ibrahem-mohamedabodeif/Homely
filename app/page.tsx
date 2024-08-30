@@ -3,7 +3,10 @@ import NavBar from "@/components/navbar";
 import NavBarBottom from "@/components/navBarBottom";
 import NavIcon from "@/components/navIcon";
 import { getAllRooms } from "@/lib/functions";
+import { createServerComponentClient } from "@/lib/server";
 import Link from "next/link";
+import { Suspense } from "react";
+import Loader from "./loader";
 
 type searchType = {
   searchParams: {
@@ -16,6 +19,10 @@ type searchType = {
 };
 
 export default async function Home({ searchParams }: searchType) {
+  const supabase = createServerComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const rooms = await getAllRooms();
   const { type, country, guests, bedrooms, price } = searchParams;
 
@@ -72,22 +79,19 @@ export default async function Home({ searchParams }: searchType) {
 
   return (
     <div className="relative">
-      <NavBar />
-      <NavIcon />
       {!filteredRooms.length && (
         <div className="flex justify-center items-center mt-36 text-xl">
           There&apos;s no Rooms matching the filters
         </div>
       )}
-      <div className="mb-20 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-10 min-[320px]:mx-12 min-[425px]:mx-16 md:mx-16 my-10">
+      <div className="mb-20 mx-10 max-sm:mb-32 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-10 my-10">
         {filteredRooms?.map((room: any) => (
           <Link href={`/${room.id}`} key={room.id}>
-            <CardItem room={room} />
+            <Suspense fallback={<Loader />}>
+              <CardItem room={room} user={user} />
+            </Suspense>
           </Link>
         ))}
-      </div>
-      <div className="fixed -bottom-1 w-full lg:hidden md:hidden ">
-        <NavBarBottom />
       </div>
     </div>
   );

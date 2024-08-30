@@ -24,7 +24,7 @@ export default function SearchBar() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSearch(country);
+          handleSearch(country.toLowerCase());
         }}
         className="flex w-full sm:flex-1"
       >

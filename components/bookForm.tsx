@@ -1,7 +1,6 @@
 "use client";
 
 import { createReservation } from "@/lib/actions";
-import { useFormStatus } from "react-dom";
 
 type searchType = {
   searchParams: {
@@ -17,7 +16,6 @@ type searchType = {
 };
 
 export default function BookForm({ searchParams }: searchType) {
-  const { pending } = useFormStatus();
   const {
     roomId,
     startDay,
@@ -78,7 +76,6 @@ export default function BookForm({ searchParams }: searchType) {
           <button
             className="bg-black w-full sm:w-72 mx-auto text-white font-bold py-2 px-4 rounded-md mt-4"
             type="submit"
-            disabled={pending}
           >
             Request to book
           </button>

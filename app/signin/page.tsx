@@ -2,6 +2,7 @@ import logo from "@/app/icon.ico";
 import SigninForm from "@/components/signinForm";
 import Image from "next/image";
 import { Suspense } from "react";
+import Loader from "../loader";
 
 export default function Page() {
   return (
@@ -14,7 +15,7 @@ export default function Page() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <Suspense fallback={<div>Loading form...</div>}>
+        <Suspense fallback={<Loader />}>
           <SigninForm />
         </Suspense>
       </div>

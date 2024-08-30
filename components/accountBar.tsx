@@ -3,11 +3,8 @@ import { useState } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import { FaUserCircle } from "react-icons/fa";
 import MegaMenu from "./megaMenu";
-import { useUser } from "@/lib/context/authProvider";
-export const revalidate = 0;
 
-export default function AccountBar() {
-  const user: any = useUser();
+export default function AccountBar({ user }: any) {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
@@ -26,7 +23,7 @@ export default function AccountBar() {
       </button>
       {open && (
         <div>
-          <MegaMenu />
+          <MegaMenu user={user} />
         </div>
       )}
     </div>

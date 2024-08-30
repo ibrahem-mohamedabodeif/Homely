@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { BsStars } from "react-icons/bs";
-import { MdManageAccounts, MdOutlineAirplaneTicket } from "react-icons/md";
+import {
+  MdManageAccounts,
+  MdOutlineAirplaneTicket,
+  MdOutlineHomeWork,
+} from "react-icons/md";
 
 export default function SideNav() {
   return (
@@ -9,6 +13,15 @@ export default function SideNav() {
         <MdManageAccounts size={27} />
         <span className="hidden lg:block lg:text-xl lg:font-semibold ">
           Account
+        </span>
+      </Link>
+      <Link
+        href={"/account/pegasus-rooms"}
+        className="flex items-center  gap-5"
+      >
+        <MdOutlineHomeWork size={27} />
+        <span className="hidden lg:block lg:text-xl lg:font-semibold">
+          PEGASUS Rooms
         </span>
       </Link>
       <Link href={"/account/reservations"} className="flex items-center  gap-5">

@@ -1,12 +1,8 @@
 "use client";
-
-import { useUser } from "@/lib/context/authProvider";
 import { addWishRoom } from "@/lib/functions";
 import toast from "react-hot-toast";
-export const revalidate = 0;
-export default function SaveButton({ roomId, children }: any) {
-  const user: any = useUser();
 
+export default function SaveButton({ roomId, children, user }: any) {
   const handleClick = async () => {
     if (!user) {
       toast.error("Should sign in first");

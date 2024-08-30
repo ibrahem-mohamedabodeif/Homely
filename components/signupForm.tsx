@@ -7,7 +7,7 @@ import { useFormState } from "react-dom";
 
 export default function SignupForm() {
   const searchParams: any = useSearchParams();
-  const [error, formAction, isPending] = useFormState(signUp, null);
+  const [error, formAction] = useFormState(signUp, null);
 
   return (
     <div>

@@ -19,7 +19,13 @@ export default function NavIcon() {
   };
 
   return (
-    <div className="relative flex items-center justify-between px-5 pt-4 pb-4 shadow-md">
+    <div
+      className={`${
+        pathName !== "/"
+          ? "hidden"
+          : "relative flex items-center justify-between px-5 pt-4 pb-4 shadow-md"
+      }`}
+    >
       <div className="flex justify-around w-[calc(100%-80px)] flex-grow overflow-x-auto gap-12 pr-10 mr-10">
         <button onClick={() => handleFilterType("room")}>
           <div className="flex flex-col items-center">

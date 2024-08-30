@@ -1,8 +1,10 @@
+import Loader from "@/app/loader";
 import WishListCard from "@/components/wishListCard";
 import { getWishRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
-export const revalidate = 0;
+import { Suspense } from "react";
+
 export default async function Page() {
   const supabase = createServerComponentClient();
   const {

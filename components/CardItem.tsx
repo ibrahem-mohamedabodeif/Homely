@@ -2,15 +2,15 @@ import Image from "next/image";
 import SaveButton from "./saveButton";
 import { FaRegHeart } from "react-icons/fa";
 
-export default function CardItem({ room }: any) {
+export default function CardItem({ room, user }: any) {
   return (
     <>
       <div className=" relative w-72 h-72 rounded-xl overflow-hidden">
-        <SaveButton roomId={room.id}>
+        <SaveButton roomId={room.id} user={user}>
           {" "}
           <FaRegHeart
-            size={23}
-            className=" absolute right-3 top-8 text-white"
+            size={35}
+            className=" absolute right-3 top-8 text-white border border-gray-900 p-1.5 rounded-full bg-gray-900"
           />
         </SaveButton>
         <Image
