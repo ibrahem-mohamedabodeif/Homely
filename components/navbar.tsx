@@ -34,7 +34,7 @@ export default function NavBar({ user }: any) {
           )}
 
           <div className="flex items-center gap-10">
-            {!isAuthPage && isOtherPage && (
+            {!isAuthPage && (
               <Link
                 href={"/hosting"}
                 className="max-sm:hidden hover:border p-3 hover:bg-gray-800 hover:text-white hover:rounded-full"
