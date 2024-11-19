@@ -18,28 +18,33 @@ export default function NavBar({ user }: any) {
       className={`${
         isAuthPage
           ? "hidden"
-          : "flex justify-between items-center mx-5 mt-3 pb-4 border-b-2"
-      } ${isHomePage ? "max-sm:flex max-sm:justify-center" : "max-sm:hidden"}`}
+          : "flex justify-between items-center pt-3 pb-4 mx-20"
+      } ${isHomePage ? "max-sm:flex max-sm:justify-center" : "max-sm:hidden "}`}
     >
       {!isAuthPage && (
         <>
-          <Link href={"/"} className="flex items-center gap-2 max-sm:hidden">
-            <Image src={logo} alt="logo" width={77} className="" />
+          <Link href={"/"}>
+            <div className="flex items-center max-sm:hidden">
+              <Image src={logo} alt="logo" width={70} className="" />
+              <h1 className="text-2xl font-bold tracking-wide text-[#F5556C]">
+                Homely
+              </h1>
+            </div>
           </Link>
 
-          {isHomePage && (
+          {/* {isHomePage && (
             <div className="flex justify-center w-auto min-w-80 max-w-96">
               <SearchBar />
             </div>
-          )}
+          )} */}
 
           <div className="flex items-center gap-10">
             {!isAuthPage && (
-              <Link
-                href={"/hosting"}
-                className="max-sm:hidden hover:border p-3 hover:bg-gray-800 hover:text-white hover:rounded-full"
-              >
-                PEGASUS Your Home
+              <Link href={"/hosting"}>
+                <h3 className="max-sm:hidden bg-white border border-[#] hover:shadow rounded-[50px] p-3  ">
+                  Be a part of{" "}
+                  <span className="text-[#F5556C] font-medium">Homely</span>
+                </h3>
               </Link>
             )}
             <div className="max-sm:hidden">

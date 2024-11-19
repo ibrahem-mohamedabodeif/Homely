@@ -84,7 +84,7 @@ export default async function Home({ searchParams }: searchType) {
           There&apos;s no Rooms matching the filters
         </div>
       )}
-      <div className="mb-20 mx-10 max-sm:mb-32 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-10 my-10">
+      <div className="mb-20 mx-20 max-sm:mb-32 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-5 my-5">
         {filteredRooms?.map((room: any) => (
           <Link href={`/${room.id}`} key={room.id}>
             <Suspense fallback={<Loader />}>
