@@ -1,31 +1,28 @@
 import Image from "next/image";
-import Link from "next/link";
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function WishListCard({ room }: any) {
   return (
-    <div className="max-w-full flex flex-col lg:flex-row gap-3">
-      <div className="w-64 h-44 rounded-xl overflow-hidden flex-shrink-0">
+    <div className="flex flex-col">
+      <div className="relative w-72 h-44 rounded-xl overflow-hidden">
+      <MdDeleteOutline
+
+            size={35}
+            className=" absolute right-1 top-1 text-white rounded-full p-1.5 bg-gray-900"
+          />
         <Image
           src={room.rooms.image1}
           alt={room.rooms.roomName}
           width={500}
-          height={500}
-          className="rounded-xl object-cover"
+          height={700}
+          className="h-full object-cover rounded-xl"
         />
       </div>
-      <div className="flex flex-col justify-between h-40">
-        <div>
-          <Link href={`/${room.id}`}>
-            <h1 className="capitalize font-semibold pb-1">
-              {room.rooms.roomName}
-            </h1>
-          </Link>
-          <h1 className="text-sm capitalize text-gray-700">
-            {room.rooms.city}, {room.rooms.country}
-          </h1>
-        </div>
-        <p className="text-gray-700 ">Hosted by {room.rooms.hostedName}</p>
-        <span className="text-gray-600">${room.rooms.price} / night</span>
+      <div className="mt-2 mb-2 ml-1">
+        <h1 className="text-lg capitalize">
+          {room.rooms.city}, {room.rooms.country}
+        </h1>
+        <p className="text-gray-700">Rethimno Beach</p>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function NavBar({ user }: any) {
           <div className="flex items-center gap-10">
             {!isAuthPage && (
               <Link href={"/hosting"}>
-                <h3 className="max-sm:hidden bg-white border border-[#] hover:shadow rounded-[50px] p-3  ">
+                <h3 className="max-sm:hidden bg-white border hover:shadow rounded-[50px] p-3  ">
                   Be a part of{" "}
                   <span className="text-[#F5556C] font-medium">Homely</span>
                 </h3>

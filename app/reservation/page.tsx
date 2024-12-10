@@ -6,6 +6,8 @@ import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Loader from "../loader";
+import NavBar from "@/components/navbar";
+import { IoIosArrowBack } from "react-icons/io";
 
 type searchType = {
   searchParams: {
@@ -34,19 +36,34 @@ export default async function page({ searchParams }: searchType) {
 
   return (
     <>
-      <div className="mx-2 lg:mx-16 mt-10 mb-24">
-        <div>
-          <h1 className="text-2xl font-semibold">Request for booking</h1>
+    <NavBar user={user} />
+      <div className="lg:mx-20 mt-5 mb-24">
+        <div className="flex items-center gap-4">
+        <IoIosArrowBack />
+          <h1 className="text-2xl tracking-wide font-semibold">Request to book</h1>
         </div>
-        <div className=" grid grid-cols-1 md:grid-cols-2 gap-10 justify-center mt-10 ">
+        <div className="mx-10 grid grid-cols-1 md:grid-cols-2 justify-center mt-10 ">
           <Suspense fallback={<Loader />}>
             <div>
-              <BookCard room={room} searchParams={searchParams} />
+              <div className="lg:max-w-lg">
+              <h1 className="text-2xl font-semibold text-[#F5556C]">Your Trip</h1>
+              <div className="pt-5 pb-5 mb-5 border-b border-[#6e6e6e] flex flex-col gap-5">
+                <div className="flex justify-between items-center">
+                <h2 className="text-lg font-medium tracking-wide">Dates</h2>
+                <span className="text-lg font-light">5 Nov - 7 Nov</span>
+                </div>
+                <div className="flex justify-between items-center">
+                <h2 className="text-lg font-medium tracking-wide">Guests</h2>
+                <span className="text-lg font-light">1 guest</span>
+                </div>
+              </div>
+              </div>
+              <BookForm searchParams={searchParams} />
             </div>
           </Suspense>
           <Suspense fallback={<Loader />}>
             <div>
-              <BookForm searchParams={searchParams} />
+              <BookCard room={room} searchParams={searchParams} />
             </div>
           </Suspense>
         </div>

@@ -1,9 +1,9 @@
-import Loader from "@/app/loader";
+import NavBar from "@/components/navbar";
 import WishListCard from "@/components/wishListCard";
 import { getWishRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
+import { IoIosArrowBack } from "react-icons/io";
 
 export default async function Page() {
   const supabase = createServerComponentClient();
@@ -17,12 +17,19 @@ export default async function Page() {
 
   return (
     <>
+    <NavBar user={user} />
+      <div className="lg:mx-20 mt-5">
+        <div className="flex items-center gap-4 pb-10">
+        <IoIosArrowBack />
+          <h1 className="text-2xl tracking-wide font-semibold"> Wish List
+          </h1>
+        </div>
       {!wishRooms?.length ? (
         <div className="text-4xl flex justify-center mt-40">
           Add some rooms to explore oneday ✨.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-y-10 gap-16 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-4 justify-center gap-y-10 gap-10 mb-24 mx-10">
           {wishRooms?.map(
             (room: {
               id: any;
@@ -45,6 +52,8 @@ export default async function Page() {
           )}
         </div>
       )}
+            </div>  
+
     </>
   );
 }

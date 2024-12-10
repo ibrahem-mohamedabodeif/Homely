@@ -7,6 +7,7 @@ import { createServerComponentClient } from "@/lib/server";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "./loader";
+import HeroSec from "@/components/heroSec";
 
 type searchType = {
   searchParams: {
@@ -79,6 +80,12 @@ export default async function Home({ searchParams }: searchType) {
 
   return (
     <div className="relative">
+      <div>
+      <div className="relative h-svh">
+          <HeroSec />
+        </div>
+          <NavIcon />
+          </div>
       {!filteredRooms.length && (
         <div className="flex justify-center items-center mt-36 text-xl">
           There&apos;s no Rooms matching the filters

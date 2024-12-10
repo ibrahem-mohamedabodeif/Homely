@@ -1,9 +1,17 @@
 import Image from "next/image";
 import SearchBar from "./searchBar";
+import NavBar from "./navbar";
+import { createServerComponentClient } from "@/lib/server";
 
-export default function HeroSec() {
+export default async function HeroSec() {
+  const supabase = createServerComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <div className="">
+                <NavBar user={user} />
+
       <Image
         src={"/naz-israyelyan-hiaI5CiVCUE-unsplash.jpg"}
         alt="cover"

@@ -28,11 +28,6 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <div className="relative h-svh">
-          <NavBar user={user} />
-          <HeroSec />
-        </div>
-        <NavIcon />
         {children}
         <div className="fixed -bottom-1 w-full lg:hidden md:hidden ">
           <NavBarBottom user={user} />

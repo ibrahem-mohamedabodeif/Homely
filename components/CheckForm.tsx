@@ -36,39 +36,39 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-gray-800 rounded-lg shadow-lg max-w-md mx-auto  lg:max-w-md ">
+    <div className="flex flex-col items-center justify-center p-6 bg-white rounded-3xl shadow-2xl w-fit">
       <div>
-        <h2 className="text-2xl font-bold text-gray-200 mb-4">Check room</h2>
-        <span className="text-lg text-gray-200">${room.price} / night</span>
+        <h2 className="text-xl text-black"> Add dates to check
+        </h2>
       </div>
-      <form className="mt-5 w-full">
-        <div className="flex flex-col md:flex-row justify-center items-center gap-2 mb-5">
-          <div className="border p-2 rounded w-full md:w-full">
-            <label className="text-gray-200 block mb-1">CHECK-IN</label>
+      <form className="mt-5 w-96">
+        <div className="grid grid-cols-2 items-center border border-[#6e6e6e] rounded-3xl p-3">
+          <div className="border-r border-[#6e6e6e] pb-2">
+            <label className="text-black block pb-2">CHECK-IN</label>
             <input
-              type="date"
+              type="text"
               value={startDay}
+              placeholder="Add date"
               readOnly
-              className="bg-transparent outline-none text-gray-200 w-full"
+              className="bg-transparent outline-none text-black w-full"
             />
           </div>
-          <div className="border p-2 rounded w-full md:w-full">
-            <label className="text-gray-200 block mb-1">CHECKOUT</label>
+          <div className="pl-2 pb-2">
+            <label className="text-black block pb-2">CHECKOUT</label>
             <input
-              type="date"
+              type="text"
               value={endDay}
+              placeholder=" Add date"
               readOnly
-              className="bg-transparent outline-none text-gray-200 w-full"
+              className="bg-transparent outline-none text-black w-full"
             />
           </div>
-        </div>
-
-        <div className="flex flex-col border p-2 rounded w-full md:w-auto  mb-5">
-          <label className="text-gray-200 block mb-1">GUESTS</label>
+          <div className="col-span-2 border-t border-[#6e6e6e] pt-2 flex flex-col">
+          <label className="text-black block pb-1">GUESTS</label>
           <select
             name="numGuests"
             id="numGuests"
-            className="bg-transparent outline-none text-gray-200 w-full"
+            className="bg-transparent outline-none text-black w-full"
             onChange={(e) => setNumGuests(e.target.value[0])}
           >
             {Array.from({ length: room.guests }, (_, i) => i + 1).map((x) => (
@@ -78,13 +78,16 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
             ))}
           </select>
         </div>
+        </div>
+
+        
 
         {!startDay && !endDay ? (
           <button
             disabled
-            className="block mx-auto w-full md:w-56 h-16 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-semibold py-2 px-4 rounded-md mt-5"
+            className="block mx-auto w-full bg-[#F5556C] text-lg text-white font-medium p-3 rounded-full mt-5"
           >
-            Choose Range to check
+             Check availability
           </button>
         ) : available === true ? (
           <Link
@@ -95,19 +98,20 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
             }&cleaningFee=${cleaningFee}&serviceFee=${serviceFee}`}
           >
             <button
-              className="block mx-auto w-full md:w-44 text-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-5 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
-              type="button"
+            className="block mx-auto w-full bg-[#F5556C] text-lg text-white font-medium p-3 rounded-full mt-5"
+            type="button"
             >
-              Reserve
+              Complete reservation
             </button>
           </Link>
         ) : (
           <button
-            className="block mx-auto w-full md:w-44 text-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-5 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
-            type="button"
+          className="block mx-auto w-full bg-[#F5556C] text-lg text-white font-medium p-3 rounded-full mt-5"
+          type="button"
             onClick={handleCheck}
           >
-            Check
+                         Check availability
+
           </button>
         )}
 
@@ -119,7 +123,7 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
 
         {available === true && (
           <div>
-            <span className="text-white text-lg font-semibold mt-5 mb-5 block">
+            <span className="text-black text-lg py-5 block text-center">
               This room is available
             </span>
           </div>

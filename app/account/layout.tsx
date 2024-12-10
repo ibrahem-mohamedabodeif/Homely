@@ -1,20 +1,27 @@
 import SideNav from "@/components/sideNav";
 import Loader from "../loader";
 import { Suspense } from "react";
+import NavBar from "@/components/navbar";
+import { createServerComponentClient } from "@/lib/server";
 
-export default function Page({
+export default async function Page({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createServerComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <>
-      <div className="grid grid-cols-12 ">
-        <div className="col-span-2 pt-10 min-h-svh bg-white shadow-xl rounded-3xl md:col-span-1 lg:col-span-2">
+    <NavBar user={user} />
+      <div className="grid grid-cols-12 mx-20 items-start">
+        <div className="col-span-2 h-svh md:col-span-1 lg:col-span-2">
           <SideNav />
         </div>
         <Suspense fallback={<Loader />}>
-          <div className="mx-7 mt-10 col-span-10">{children}</div>
+          <div className="ml-20 col-span-10">{children}</div>
         </Suspense>
       </div>
     </>
