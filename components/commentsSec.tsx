@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function CommentsSec() {
+export default function CommentsSec({roomId, userId}: any) {
   return (
     <div className="grid grid-cols-3 gap-10">
     <div>

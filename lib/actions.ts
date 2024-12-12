@@ -79,30 +79,35 @@ export async function signUp( previousState:any,formData: FormData) {
   const email = formData.get("email") as string
   const password = formData.get("password") as string;
   const name = formData.get("fullName") as string
-  const phone = formData.get("phoneNumber")
   const searchParams = formData.get("searchParams") as string
 
-  
-  const { error } = await supabase.auth.signUp({
-    email: email,
-    password: password, options: {
-      data: {
-        name: name,
-        phone: phone
-      }
-    }
-  });
-
-  if (error) {
-    return error.message
+  // sign up
+  const { error: signUpError } = await supabase.auth.signUp({ email, password });
+  if (signUpError) {
+    return signUpError.message;
   }
+  // retrieve user
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData?.user) {
+    return userError?.message || "Failed to retrieve user after sign-up.";
+  }
+// insert user in users table
+  const { error: insertError } = await supabase
+  .from("users")
+  .insert([{ user_name: name, user_email: email, user_id: userData.user.id }]);
 
-  const redirectUrl = searchParams.length
-    ? `/reservation?${new URLSearchParams(searchParams).toString()}`
-    : "/";
-
-  redirect(redirectUrl);
+if (insertError) {
+  return insertError.message;
 }
+
+
+const redirectUrl = searchParams
+? `/reservation?${new URLSearchParams(searchParams).toString()}`
+: "/";
+
+redirect(redirectUrl);
+}
+
 
 export async function signOut() {
 
@@ -254,5 +259,43 @@ export async function updateRoom(formData: FormData) {
   return data;
 }
 
+export async function updateUserInfo(previousState: any, formData: FormData) {
+  const { data } = await supabase.auth.getUser();
+  const userId = data.user?.id;
+
+  const { data: recentUser, error: userError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  if (userError) {
+    throw new Error("Failed to fetch user details: " + userError.message);
+  }
+
+  const user = {
+    user_name: formData.get("user_name") || recentUser.user_name,
+    user_birthDate: formData.get("date_of_birth") || recentUser.user_birthDate,
+    user_phone: formData.get("phone_number") || recentUser.user_phone,
+    user_about: formData.get("about") || recentUser.user_about,
+    user_work: formData.get("work") || recentUser.user_work,
+    user_hobbies: formData.get("hobbies") || recentUser.user_hobbies,
+    user_languages: formData.get("languages") || recentUser.user_languages,
+    user_location: formData.get("city") || recentUser.user_location,
+  };
+
+  const { data: updatedUser, error } = await supabase
+    .from("users")
+    .update(user)
+    .eq("user_id", userId)
+    .select();
+
+  if (error) {
+    throw new Error("Failed to update user details: " + error.message);
+  }
+
+  revalidatePath("/account");
+  return updatedUser;
+}
 
 

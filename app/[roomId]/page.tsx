@@ -111,7 +111,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         </div>
         <div className="border-t-2 py-10">
           <Suspense fallback={<Loader />}>
-          <CommentsSec/>
+          <CommentsSec roomId={params.roomId} userId={user?.id}/>
           </Suspense>
         </div>
         <div className="border-t-2 py-5">

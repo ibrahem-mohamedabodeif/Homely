@@ -1,6 +1,4 @@
 import CardItem from "@/components/CardItem";
-import NavBar from "@/components/navbar";
-import NavBarBottom from "@/components/navBarBottom";
 import NavIcon from "@/components/navIcon";
 import { getAllRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
@@ -13,9 +11,10 @@ type searchType = {
   searchParams: {
     type?: string;
     country?: string;
-    guests?: string;
-    bedrooms?: string;
+    guestsNum?: number;
+    bedroomsNum?: number;
     price?: string;
+    bedsNum?: number;
   };
 };
 
@@ -25,7 +24,8 @@ export default async function Home({ searchParams }: searchType) {
     data: { user },
   } = await supabase.auth.getUser();
   const rooms = await getAllRooms();
-  const { type, country, guests, bedrooms, price } = searchParams;
+  const { type, country, guestsNum, bedroomsNum, bedsNum, price } =
+    searchParams;
 
   let filteredRooms = rooms;
 
@@ -37,30 +37,21 @@ export default async function Home({ searchParams }: searchType) {
     filteredRooms = filteredRooms.filter((room) => room.country === country);
   }
 
-  if (guests) {
-    if (guests === "1")
-      filteredRooms = filteredRooms.filter((room) => room.guests === 1);
-    else if (guests === "2")
-      filteredRooms = filteredRooms.filter((room) => room.guests === 2);
-    else if (guests === ">2")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.guests > 2 && room.guests < 10
-      );
-    else if (guests === ">10")
-      filteredRooms = filteredRooms.filter((room) => room.guests >= 10);
+  if (guestsNum) {
+    filteredRooms = filteredRooms.filter(
+      (room) => room.guests === Number(guestsNum)
+    );
   }
 
-  if (bedrooms) {
-    if (bedrooms === "1")
-      filteredRooms = filteredRooms.filter((room) => room.noBedroom === 1);
-    else if (bedrooms === "2")
-      filteredRooms = filteredRooms.filter((room) => room.noBedroom === 2);
-    else if (bedrooms === ">2")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.noBedroom > 2 && room.noBedroom <= 5
-      );
-    else if (bedrooms === ">5")
-      filteredRooms = filteredRooms.filter((room) => room.noBedroom >= 5);
+  if (bedroomsNum) {
+    filteredRooms = filteredRooms.filter(
+      (room) => room.noBedroom === Number(bedroomsNum)
+    );
+  }
+  if (bedsNum) {
+    filteredRooms = filteredRooms.filter(
+      (room) => room.noBed === Number(bedsNum)
+    );
   }
 
   if (price) {
@@ -81,11 +72,11 @@ export default async function Home({ searchParams }: searchType) {
   return (
     <div className="relative">
       <div>
-      <div className="relative h-svh">
+        <div className="relative h-svh">
           <HeroSec />
         </div>
-          <NavIcon />
-          </div>
+        <NavIcon />
+      </div>
       {!filteredRooms.length && (
         <div className="flex justify-center items-center mt-36 text-xl">
           There&apos;s no Rooms matching the filters

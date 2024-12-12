@@ -45,21 +45,6 @@ export default function SignupForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium leading-6 text-gray-900">
-            Phone Number
-          </label>
-          <div className="mt-2">
-            <input
-              name="phoneNumber"
-              type="text"
-              required
-              autoComplete="phoneNumber"
-              className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-
-        <div>
           <div className="flex ">
             <label className="block text-sm font-medium leading-6 text-gray-900">
               Password
@@ -96,7 +81,7 @@ export default function SignupForm() {
           }
           className="text-lg font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
         >
-          Sign In
+          sign in
         </Link>
       </p>
     </div>

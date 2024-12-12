@@ -3,6 +3,8 @@ import Loader from "../loader";
 import { Suspense } from "react";
 import NavBar from "@/components/navbar";
 import { createServerComponentClient } from "@/lib/server";
+import { getUserData } from "@/lib/functions";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   children,
@@ -13,17 +15,22 @@ export default async function Page({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) redirect("/signin");
+
+  const userData = await getUserData(user?.id);
+
   return (
-    <>
-    <NavBar user={user} />
+    <div className="relative">
+      <NavBar user={user} />
       <div className="grid grid-cols-12 mx-20 items-start">
         <div className="col-span-2 h-svh md:col-span-1 lg:col-span-2">
-          <SideNav />
+          <SideNav userData={userData} />
         </div>
         <Suspense fallback={<Loader />}>
           <div className="ml-20 col-span-10">{children}</div>
         </Suspense>
       </div>
-    </>
+    </div>
   );
 }
