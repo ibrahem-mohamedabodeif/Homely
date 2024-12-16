@@ -1,5 +1,5 @@
-import PegasusRoom from "@/components/pegasusRoom";
-import { getPegasusRooms } from "@/lib/functions";
+import HomelyRoomCard from "@/components/homelyRoomCard";
+import { getHomelyRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 export const revalidate = 10;
 export default async function Page() {
@@ -8,16 +8,16 @@ export default async function Page() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const pegasusRooms = await getPegasusRooms(user?.id);
+  const homelyRooms = await getHomelyRooms(user?.id);
 
   return (
     <>
-      {!pegasusRooms?.length ? (
+      {!homelyRooms?.length ? (
         <div className="text-4xl flex justify-center mt-40">No Rooms yet</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-y-10 gap-16 mb-24">
-          {pegasusRooms.map((room) => (
-            <PegasusRoom room={room} key={room.id} />
+          {homelyRooms.map((room) => (
+            <HomelyRoomCard room={room} key={room.id} />
           ))}
         </div>
       )}

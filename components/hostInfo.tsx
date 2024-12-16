@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function HostInfo() {
+export default function HostInfo({ userData }: any) {
   return (
     <div>
       <h1 className="text-2xl font-medium mb-10"> Meet your Host</h1>
@@ -14,26 +14,26 @@ export default function HostInfo() {
               className="h-full rounded-full object-cover"
             />
           </div>
-          <span className="text-xl font-medium pt-5">Ibrahem Mohamed</span>
+          <span className="text-xl font-medium pt-5 capitalize">
+            {userData.user_name.split(" ").slice(0, 2).join(" ")}
+          </span>
         </div>
         <div className="col-span-3 flex flex-col">
           <h1 className="capitalize text-2xl font-medium pb-10">
-            ibrahem mohamed
+            {userData.user_name}
           </h1>
           <p className="text-lg font-light leading-relaxed">
-            {" "}
-            Superhosts are experienced, highly rated hosts who are committed to
-            providing great stays for guests. Superhosts are experienced, highly
-            rated hosts who are committed to providing great stays for guests.
+            {userData.user_about}
           </p>
           <div>
-            <h4 className="text-base capitalize pb-2 pt-10">
-              {" "}
-              My work : Front-end developer
+            <h4 className="text-base font-light capitalize pb-2 pt-10">
+              My work : {userData.user_work}
             </h4>
-            <h4 className="text-base capitalize">
-              {" "}
-              Hobbies : Gym, PlayStation
+            <h4 className="text-base font-light capitalize pb-2">
+              Hobbies : {userData.user_hobbies}
+            </h4>
+            <h4 className="text-base font-light capitalize">
+              Languages : {userData.user_languages}
             </h4>
           </div>
         </div>

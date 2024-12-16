@@ -2,7 +2,7 @@ import logo from "@/app/icon.ico";
 import SignupForm from "@/components/signupForm";
 import Image from "next/image";
 import { Suspense } from "react";
-import Loader from "../loader";
+import Loader from "../loading";
 
 export default function Page() {
   return (

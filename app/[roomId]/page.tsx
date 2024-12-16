@@ -1,14 +1,14 @@
 import { CiHeart } from "react-icons/ci";
 import { Calender } from "@/components/calender";
 import CheckForm from "@/components/CheckForm";
-import { getAllRooms, getRoomById } from "@/lib/functions";
+import { getAllRooms, getRoomById, getUserData } from "@/lib/functions";
 import SaveButton from "@/components/saveButton";
 import PlaceOffers from "@/components/roomDesc";
 import PlaceRule from "@/components/placeRule";
 import ImageComponent from "@/components/imageComponent";
 import { createServerComponentClient } from "@/lib/server";
 import { Suspense } from "react";
-import Loader from "../loader";
+import Loader from "../loading";
 import NavBar from "@/components/navbar";
 import { RiShare2Line } from "react-icons/ri";
 import { GoShare } from "react-icons/go";
@@ -63,7 +63,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+const userData = await getUserData(user?.id);
   const room: Room = await getRoomById(params.roomId);
 
   const {
@@ -86,7 +86,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   return (
     <>
-      <NavBar user={user} />
+      <NavBar user={user||null} />
       <div className="mx-20 mb-16">
         <Suspense fallback={<Loader />}>
           <RoomInfo user={user} room={room} roomId={params.roomId} />
@@ -111,12 +111,12 @@ export default async function Page({ params, searchParams }: PageProps) {
         </div>
         <div className="border-t-2 py-10">
           <Suspense fallback={<Loader />}>
-          <CommentsSec roomId={params.roomId} userId={user?.id}/>
+          <CommentsSec roomId={params.roomId}/>
           </Suspense>
         </div>
         <div className="border-t-2 py-5">
           <Suspense fallback={<Loader />}>
-          <HostInfo/>
+          <HostInfo userData={userData}/>
           </Suspense>
         </div>
         <Suspense fallback={<Loader />}>

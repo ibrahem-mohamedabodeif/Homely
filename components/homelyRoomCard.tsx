@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { IoMdTrash } from "react-icons/io";
 import { LuPenLine } from "react-icons/lu";
-export default function PegasusRoom({ room }: any) {
+export default function HomelyRoomCard({ room }: any) {
   const router = useRouter();
   const handleDelete = async (roomId: string) => {
     try {

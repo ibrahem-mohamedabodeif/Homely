@@ -8,7 +8,7 @@ export default function SideNav({ userData }: any) {
         <div className="relative w-40 h-48 overflow-hidden">
           <Image src={"/icon.ico"} fill alt="image" />
         </div>
-        <span className="text-xl font-light">{userData.user_name}</span>
+        <span className="text-xl font-light">{userData.user_name.split(" ").slice(0, 2).join(" ")}</span>
       </div>
       <Link href={"/account"}>
         <span className="text-lg font-light">Personal Information</span>
@@ -16,7 +16,7 @@ export default function SideNav({ userData }: any) {
       <Link href={"/account/about-you"}>
         <span className="text-lg font-light">About You</span>
       </Link>
-      <Link href={"/account/pegasus-rooms"}>
+      <Link href={"/account/homely-rooms"}>
         <span className="text-lg font-light">Your Homely Rooms</span>
       </Link>
     </div>

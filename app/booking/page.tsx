@@ -5,9 +5,10 @@ import { Room } from "../[roomId]/page";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import Loader from "../loader";
+import Loader from "../loading";
 import NavBar from "@/components/navbar";
-import { IoIosArrowBack } from "react-icons/io";
+import BackBtn from "@/components/backBtn";
+import { format } from "date-fns";
 
 type searchType = {
   searchParams: {
@@ -34,12 +35,19 @@ export default async function page({ searchParams }: searchType) {
   }
   const room: Room = await getRoomById(searchParams.roomId);
 
+  function formatDateRange(startDate: string, endDate: string) {
+    const startFormatted = format(new Date(startDate), "d MMM");
+    const endFormatted = format(new Date(endDate), "d MMM");
+  
+    return `${startFormatted} - ${endFormatted}`;
+  }
+
   return (
     <>
     <NavBar user={user} />
       <div className="lg:mx-20 mt-5 mb-24">
         <div className="flex items-center gap-4">
-        <IoIosArrowBack />
+        <BackBtn />
           <h1 className="text-2xl tracking-wide font-semibold">Request to book</h1>
         </div>
         <div className="mx-10 grid grid-cols-1 md:grid-cols-2 justify-center mt-10 ">
@@ -49,12 +57,12 @@ export default async function page({ searchParams }: searchType) {
               <h1 className="text-2xl font-semibold text-[#F5556C]">Your Trip</h1>
               <div className="pt-5 pb-5 mb-5 border-b border-[#6e6e6e] flex flex-col gap-5">
                 <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium tracking-wide">Dates</h2>
-                <span className="text-lg font-light">5 Nov - 7 Nov</span>
+                <h2 className="text-lg  tracking-wide">Dates</h2>
+                <span className="text-lg font-light">{formatDateRange(searchParams.startDay, searchParams.endDay)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium tracking-wide">Guests</h2>
-                <span className="text-lg font-light">1 guest</span>
+                <h2 className="text-lg tracking-wide">Guests</h2>
+                <span className="text-lg font-light">{searchParams.guests} guest</span>
                 </div>
               </div>
               </div>

@@ -3,6 +3,8 @@
 import {  redirect } from "next/navigation";
 import { createServerComponentClient } from "./server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getUserData } from "./functions";
+import { add } from "date-fns";
 
 
 
@@ -119,12 +121,16 @@ export async function signOut() {
 }
 
 export async function addRoom(formData: FormData) {
+  const userId = formData.get("userId");
+  const userData = await getUserData(userId);
+   const userName = userData?.user_name;
+
   const room: Record<string, any> = {
     userId:formData.get("userId"),
-    hostedName: formData.get("hostedName"),
+    hostedName: userName,
     country: formData.get("country"),
     city: formData.get("city"),
-    place: formData.get("place"),
+    address: formData.get("address"),
     roomName: formData.get("roomName"),
     category: formData.get("category"),
     description: formData.get("description"),
@@ -172,7 +178,8 @@ export async function addRoom(formData: FormData) {
   if (error) {
     throw new Error("Failed to insert room details: " + error.message);
   }
-  redirect("/account/pegasus-rooms");
+  revalidatePath("/")
+  redirect("/account/homely-rooms");
   return data;
 }
 
@@ -255,7 +262,7 @@ export async function updateRoom(formData: FormData) {
   if (error) {
     throw new Error("Failed to update room details: " + error.message);
   }
-  redirect("/account/pegasus-rooms");
+  redirect("/account/homely-rooms");
   return data;
 }
 
@@ -298,4 +305,32 @@ export async function updateUserInfo(previousState: any, formData: FormData) {
   return updatedUser;
 }
 
+export async function addComment(previousState: any, formData: FormData) {
+  const { data: {user} } = await supabase.auth.getUser();
+  const userId = user?.id;
+
+  let userName = "guest";
+  if (userId) {
+    const userData = await getUserData(userId);
+    userName = userData?.user_name || "guest";
+  }
+
+  const comment = {
+    room_id: formData.get("roomId"),
+    comment: formData.get("comment"),
+    user_name: userName
+  };
+
+  const { data, error } = await supabase
+    .from("comments")
+    .insert(comment)
+    .select();
+
+  if (error) {
+    throw new Error("Failed to add comment: " + error.message);
+  }
+
+  revalidatePath(`/${comment.room_id}`);
+  return data;
+}
 

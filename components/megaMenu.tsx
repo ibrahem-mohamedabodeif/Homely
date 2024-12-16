@@ -4,19 +4,19 @@ import Link from "next/link";
 export default function MegaMenu({ user }: any) {
   return (
     <div className="absolute right-0 flex flex-col items-start gap-4 border p-4 rounded-lg  bg-white shadow-xl z-10">
-      <Link href={"/account/reservations"}>Reservations</Link>
+      <Link href={"/trips"}>Trips</Link>
       <Link
-        href={"/account/wishlist"}
+        href={"/wishlist"}
         className=" after:content-[''] after:block after:mt-4 after:w-24 after:h-px after:bg-black"
       >
         Wish list
       </Link>
-      <Link
-        href={"/account/pegasus-rooms"}
+      {/* <Link
+        href={"/homely-rooms"}
         className=" after:content-[''] after:block after:mt-4 after:w-24 after:h-px after:bg-black"
       >
         Rooms
-      </Link>
+      </Link> */}
       <Link href={"/account"}>Account</Link>
       {user ? (
         <button onClick={() => signOut()}>Logout</button>

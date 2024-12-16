@@ -3,7 +3,7 @@ import SaveButton from "./saveButton";
 import { CiHeart } from "react-icons/ci";
 import { Suspense } from "react";
 import ImageComponent from "./imageComponent";
-import Loader from "@/app/loader";
+import Loader from "@/app/loading";
 
 export default function RoomInfo({...props}:any) {
     const {

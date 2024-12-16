@@ -4,21 +4,33 @@ import setup from "@/public/65214d06-ffb4-4b70-93c0-01d368e76649.webp";
 import { FaHouseChimneyMedical } from "react-icons/fa6";
 import Link from "next/link";
 import { Suspense } from "react";
-import Loader from "../loader";
+import Loader from "../loading";
+import NavBar from "@/components/navbar";
+import { createServerComponentClient } from "@/lib/server";
 
-export default function Page() {
+export default async function Page() {
+  const supabase = createServerComponentClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <>
+        <NavBar user={user} />
+    <div>
+
       {/* Host Invitation Section */}
       <Suspense fallback={<Loader />}>
         <div className="flex flex-col sm:flex-row justify-end items-center gap-5 sm:gap-10 mx-5 sm:mx-16 mt-3">
-          <h3 className="text-lg font-semibold text-center sm:text-left">
+          <h3 className="text-lg font-medium text-center sm:text-left">
             Ready to become a host?
           </h3>
           <Link href={"/hosting/become-a-host"}>
-            <button className="tracking-wide flex items-center gap-2 border p-3 rounded-full bg-gray-800 hover:bg-gray-950 text-gray-100 font-medium">
+          
+
+            <button className="tracking-wide flex items-center gap-2 text-white bg-[#F5556C] border hover:shadow rounded-[50px] p-3 ">
               <FaHouseChimneyMedical size={20} />
-              PEGASUS Setup
+         Homely
+              Setup
             </button>
           </Link>
         </div>
@@ -28,8 +40,8 @@ export default function Page() {
       <Suspense fallback={<Loader />}>
         <div className="max-sm:border-b-2 flex flex-col sm:flex-row justify-between items-center mx-5 sm:mx-16 mb-10 sm:mb-28 mt-8 sm:mt-14">
           <div className="flex flex-col items-center text-3xl sm:text-4xl mb-10 sm:mb-0">
-            <span className="font-bold text-gray-900 text-center">
-              Become a host!
+            <span className="font-bold text-[#F5556C] text-center">
+              Become a host !
             </span>
             <span className="mt-5 text-gray-800 text-center">
               You could earn
@@ -49,12 +61,12 @@ export default function Page() {
         </div>
       </Suspense>
 
-      {/* Pegasus Setup Section */}
+      {/* Homely Setup Section */}
       <Suspense fallback={<Loader />}>
         <div className="flex flex-col items-center mx-5 sm:mx-16">
           <div className="text-center">
             <h1 className="text-3xl sm:text-5xl font-bold pb-8 sm:pb-12">
-              Hosting is easy with Pegasus Setup
+              Hosting is easy with <span className="text-[#F5556C]">Homely</span> Setup
             </h1>
             <Image
               src={setup}
@@ -113,6 +125,7 @@ export default function Page() {
           </button>
         </div>
       </Suspense>
+    </div>
     </>
   );
 }

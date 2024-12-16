@@ -4,7 +4,7 @@ import { getAllRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import Link from "next/link";
 import { Suspense } from "react";
-import Loader from "./loader";
+import Loader from "./loading";
 import HeroSec from "@/components/heroSec";
 
 type searchType = {

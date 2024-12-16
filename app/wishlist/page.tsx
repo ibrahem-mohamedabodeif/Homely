@@ -1,9 +1,9 @@
+import BackBtn from "@/components/backBtn";
 import NavBar from "@/components/navbar";
 import WishListCard from "@/components/wishListCard";
 import { getWishRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
-import { IoIosArrowBack } from "react-icons/io";
 
 export default async function Page() {
   const supabase = createServerComponentClient();
@@ -20,7 +20,7 @@ export default async function Page() {
     <NavBar user={user} />
       <div className="lg:mx-20 mt-5">
         <div className="flex items-center gap-4 pb-10">
-        <IoIosArrowBack />
+        <BackBtn/>
           <h1 className="text-2xl tracking-wide font-semibold"> Wish List
           </h1>
         </div>
@@ -45,6 +45,7 @@ export default async function Page() {
                 roomName: string;
                 hostedName: string;
                 price: number;
+                address:string;
               };
             }) => (
               <WishListCard room={room} key={room.id} />

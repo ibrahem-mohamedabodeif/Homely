@@ -19,7 +19,7 @@ type CheckParams = {
 
 export default function CheckForm({ room, searchParams }: CheckParams) {
   const { startDay, endDay, nights } = searchParams;
-  const [numGuests, setNumGuests] = useState("");
+  const [numGuests, setNumGuests] = useState(1);
   const cleaningFee = 130.19;
   const serviceFee = 118.89;
 
@@ -69,7 +69,7 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
             name="numGuests"
             id="numGuests"
             className="bg-transparent outline-none text-black w-full"
-            onChange={(e) => setNumGuests(e.target.value[0])}
+            onChange={(e) => setNumGuests(Number(e.target.value))}
           >
             {Array.from({ length: room.guests }, (_, i) => i + 1).map((x) => (
               <option value={x} key={x} className="text-gray-600">
@@ -91,7 +91,7 @@ export default function CheckForm({ room, searchParams }: CheckParams) {
           </button>
         ) : available === true ? (
           <Link
-            href={`/reservation?roomId=${
+            href={`/booking?roomId=${
               room.id
             }&startDay=${startDay}&endDay=${endDay}&nights=${nights}&guests=${numGuests}&totalPrice=${
               room.price * nights

@@ -1,13 +1,13 @@
 import Image from "next/image";
-import logo from "./icon.ico";
-export default function Loader() {
+export default function Loading() {
   return (
-    <div className="flex-col gap-4 w-full flex items-center justify-center">
+    <div className="flex-col gap-4 w-full h-screen  flex items-center justify-center">
       <div className="w-28 h-28 flex items-center justify-center rounded-full">
         <Image
-          src={logo}
+          src={"/favicon.ico"}
           alt="logo"
           width={200}
+          height={200}
           priority={true}
           className="animate-pulse opacity-5"
         />
