@@ -24,25 +24,9 @@ export default function layout({
         </p>
       </div>
 
-      <div className="flex flex-col gap-y-10">
-        <div className="flex items-center gap-5 pt-10">
-          <Link
-            href={"/account/homely-rooms"}
-            className="text-center border p-2 w-24 rounded-2xl bg-gray-800 text-white"
-          >
-            <span>Rooms</span>
-          </Link>
-          <Link
-            href={"/account/homely-rooms/bookings"}
-            className="text-center border p-2 w-24 rounded-2xl bg-gray-800 text-white"
-          >
-            <span>Bookings</span>
-          </Link>
-        </div>
-        <Suspense fallback={<Loader />}>
-          <div>{children}</div>
-        </Suspense>
-      </div>
+      <Suspense fallback={<Loader />}>
+        <div className="mt-10">{children}</div>
+      </Suspense>
     </div>
   );
 }

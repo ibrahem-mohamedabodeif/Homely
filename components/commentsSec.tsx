@@ -17,9 +17,10 @@ type Comment = {
 
 type CommentsSecProps = {
   roomId: string;
+  userData: any;
 };
 
-export default function CommentsSec({ roomId }: CommentsSecProps) {
+export default function CommentsSec({ roomId, userData }: CommentsSecProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [error, formAction] = useFormState(async (previousState: any, formData: FormData) => {
     await addComment(previousState, formData);
@@ -43,7 +44,7 @@ export default function CommentsSec({ roomId }: CommentsSecProps) {
       <div className="flex items-start gap-3">
         <div className="relative w-12 h-12 rounded-full overflow-hidden">
           <Image
-            src={"/65214d06-ffb4-4b70-93c0-01d368e76649.webp"}
+            src={userData.user_image}
             alt="image"
             width={200}
             height={200}
@@ -70,7 +71,7 @@ export default function CommentsSec({ roomId }: CommentsSecProps) {
           <div className="flex items-center gap-2">
             <div className="relative w-12 h-12 rounded-full overflow-hidden">
               <Image
-                src={"/65214d06-ffb4-4b70-93c0-01d368e76649.webp"}
+                src={userData.user_image}
                 alt="Profile image"
                 width={200}
                 height={200}

@@ -1,11 +1,23 @@
 "use client";
-import { GiIsland, GiSpookyHouse, GiTreehouse } from "react-icons/gi";
+
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { IoBedOutline } from "react-icons/io5";
+import { GiSpookyHouse, GiIsland, GiTreehouse } from "react-icons/gi";
+import { TbBeach } from "react-icons/tb";
 import { MdCabin } from "react-icons/md";
 import { PiBuildingApartmentFill } from "react-icons/pi";
-import { TbBeach } from "react-icons/tb";
 import Filter from "./filter";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import ActiveFilterBtn from "./activeIcon";
+
+const filters = [
+  { value: "room", label: "Rooms", Icon: IoBedOutline },
+  { value: "mansions", label: "Mansions", Icon: GiSpookyHouse },
+  { value: "beachfront", label: "Beachfront", Icon: TbBeach },
+  { value: "island", label: "Islands", Icon: GiIsland },
+  { value: "cabin", label: "Cabins", Icon: MdCabin },
+  { value: "treehouse", label: "Treehouses", Icon: GiTreehouse },
+  { value: "luxe", label: "Luxe", Icon: PiBuildingApartmentFill },
+];
 
 export default function NavIcon() {
   const router = useRouter();
@@ -13,7 +25,7 @@ export default function NavIcon() {
   const pathName = usePathname();
 
   const handleFilterType = (value: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set("type", value);
     router.replace(`${pathName}?${params.toString()}`);
   };
@@ -27,52 +39,19 @@ export default function NavIcon() {
       }`}
     >
       <div className="flex justify-around w-[calc(100%-80px)] flex-grow overflow-x-auto gap-12 pr-20 mr-20">
-        <button onClick={() => handleFilterType("room")}>
-          <div className="flex flex-col items-center gap-2">
-            <IoBedOutline size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">Rooms</span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("mansions")}>
-          <div className="flex flex-col items-center gap-2">
-            <GiSpookyHouse size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">Mansions</span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("beachfront")}>
-          <div className="flex flex-col items-center gap-2">
-            <TbBeach size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">
-              Beachfront
-            </span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("island")}>
-          <div className="flex flex-col items-center gap-2">
-            <GiIsland size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">Islands</span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("cabin")}>
-          <div className="flex flex-col items-center gap-2">
-            <MdCabin size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">Cabins</span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("treehouse")}>
-          <div className="flex flex-col items-center gap-2">
-            <GiTreehouse size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">
-              Treehouses
-            </span>
-          </div>
-        </button>
-        <button onClick={() => handleFilterType("luxe")}>
-          <div className="flex flex-col items-center gap-2">
-            <PiBuildingApartmentFill size={30} className="text-slate-500" />
-            <span className="text-xs font-medium text-slate-500">Luxe</span>
-          </div>
-        </button>
+        {filters.map(({ value, label, Icon }) => (
+          <ActiveFilterBtn
+            key={value}
+            filterType="type"
+            value={value}
+            onClick={() => handleFilterType(value)}
+          >
+            <div className="flex flex-col items-center gap-2">
+              <Icon size={30} />
+              <span className="text-xs font-medium">{label}</span>
+            </div>
+          </ActiveFilterBtn>
+        ))}
       </div>
       <div className="absolute right-0 top-0 bottom-0 flex items-center bg-white">
         <Filter />

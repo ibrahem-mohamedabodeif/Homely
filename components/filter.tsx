@@ -1,15 +1,14 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiFilter } from "react-icons/ci";
 
 interface Filters {
   price: string;
-  bedsNum: number;
-  bedroomsNum: number;
-  guestsNum: number;
+  bedsNum: string;
+  bedroomsNum: string;
+  guestsNum: string;
 }
-
 
 export default function Filter() {
   const [open, setOpen] = useState(false);
@@ -17,24 +16,31 @@ export default function Filter() {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
-  const [price, setPrice] = useState("");
-  const [guestsNum, setGuestsNum] = useState(0);
-  const [bedsNum, setBedsNum] = useState(0);
-  const [bedroomsNum, setBedroomsNum] = useState(0);
-  const handlePlus = (count: number, setCount: (count: number) => void) => {
-    setCount(count + 1);
+  const [price, setPrice] = useState<string>(searchParams.get("price") || "");
+  const [guestsNum, setGuestsNum] = useState<string>(searchParams.get("guestsNum") || "0");
+  const [bedsNum, setBedsNum] = useState<string>(searchParams.get("bedsNum") || "0");
+  const [bedroomsNum, setBedroomsNum] = useState<string>(searchParams.get("bedroomsNum") || "0");
+
+
+  const handlePlus = (count: number, setCount: (count: string) => void) => {
+    setCount((count + 1).toString());
   };
-  const handleMinus = (count: number, setCount: (count: number) => void) => {
-    setCount(count - 1);
-    if (count <= 0) {
-      setCount(0);
-    }
+
+  const handleMinus = (count: number, setCount: (count: string) => void) => {
+    setCount((count > 0 ? count - 1 : 0).toString());
   };
 
   const handleFilter = (filters: Filters) => {
+    if (!filters.guestsNum || filters.guestsNum === "0") {
+      filters.guestsNum = searchParams.get("guestsNum") || "0";
+    }
     const params = new URLSearchParams(searchParams);
     Object.entries(filters).forEach(([key, value]) => {
-      params.set(key, value);
+      if (value !== "0" && value !== "") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
     });
     router.replace(`${pathName}?${params.toString()}`);
     setOpen(false);
@@ -42,9 +48,9 @@ export default function Filter() {
 
   const handleClearFilters = () => {
     setPrice("");
-    setBedsNum(0);
-    setBedroomsNum(0);
-    setGuestsNum(0);
+    setBedsNum("0");
+    setBedroomsNum("0");
+    setGuestsNum("0");
     router.replace(pathName);
   };
 
@@ -80,30 +86,26 @@ export default function Filter() {
               <h1 className="text-xl pl-2 tracking-wider">Price</h1>
               <div className="grid grid-cols-3 gap-2">
                 <button
-                  // onClick={() => handleFilter("price", "<200")}
                   onClick={() => setPrice("<200")}
-                  className="border border-[#6e6e6e] p-2  rounded-full"
+                  className={`border p-2 rounded-full ${price === "<200" && "bg-[#F5556C] text-white"}`}
                 >
                   $10 - $200
                 </button>
                 <button
-                  // onClick={() => handleFilter("price", "<500")}
                   onClick={() => setPrice("<500")}
-                  className="border border-[#6e6e6e] p-2  rounded-full"
+                  className={`border p-2 rounded-full ${price === "<500" && "bg-[#F5556C] text-white"}`}
                 >
                   $200 - $500
                 </button>
                 <button
-                  // onClick={() => handleFilter("price", "<1000")}
                   onClick={() => setPrice("<1000")}
-                  className="border border-[#6e6e6e] p-2  rounded-full"
+                  className={`border p-2 rounded-full ${price === "<1000" && "bg-[#F5556C] text-white"}`}
                 >
                   $500 - $1000
                 </button>
                 <button
-                  // onClick={() => handleFilter("price", ">1000")}
                   onClick={() => setPrice(">1000")}
-                  className="border border-[#6e6e6e] p-2 rounded-full"
+                  className={`border p-2 rounded-full ${price === ">1000" && "bg-[#F5556C] text-white"}`}
                 >
                   {">"} 1000
                 </button>
@@ -118,16 +120,16 @@ export default function Filter() {
                 <h1 className="text-lg font-light">Bedrooms</h1>
                 <div className="flex gap-5">
                   <button
-                    onClick={() => handleMinus(bedroomsNum, setBedroomsNum)}
+                    onClick={() => handleMinus(Number(bedroomsNum), setBedroomsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-center text-3xl"
                   >
                     -
                   </button>
                   <span className="w-8 text-center">
-                    {bedroomsNum === 0 ? "Any" : bedroomsNum}
+                    {bedroomsNum === "0" ? "Any" : bedroomsNum}
                   </span>
                   <button
-                    onClick={() => handlePlus(bedroomsNum, setBedroomsNum)}
+                    onClick={() => handlePlus(Number(bedroomsNum), setBedroomsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"
                   >
                     +
@@ -138,16 +140,16 @@ export default function Filter() {
                 <h1 className="text-lg font-light">Beds</h1>
                 <div className="flex gap-5">
                   <button
-                    onClick={() => handleMinus(bedsNum, setBedsNum)}
+                    onClick={() => handleMinus(Number(bedsNum), setBedsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-center text-3xl"
                   >
                     -
                   </button>
                   <span className="w-8 text-center">
-                    {bedsNum === 0 ? "Any" : bedsNum}
+                    {bedsNum === "0" ? "Any" : bedsNum}
                   </span>
                   <button
-                    onClick={() => handlePlus(bedsNum, setBedsNum)}
+                    onClick={() => handlePlus(Number(bedsNum), setBedsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"
                   >
                     +
@@ -162,16 +164,16 @@ export default function Filter() {
                 <h1 className="text-lg font-light">Guests Num</h1>
                 <div className="flex gap-5">
                   <button
-                    onClick={() => handleMinus(guestsNum, setGuestsNum)}
+                    onClick={() => handleMinus(Number(guestsNum), setGuestsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-center text-3xl"
                   >
                     -
                   </button>
                   <span className="w-8 text-center">
-                    {guestsNum === 0 ? "Any" : guestsNum}
+                    {guestsNum === "0" ? "Any" : guestsNum}
                   </span>
                   <button
-                    onClick={() => handlePlus(guestsNum, setGuestsNum)}
+                    onClick={() => handlePlus(Number(guestsNum), setGuestsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"
                   >
                     +
@@ -181,7 +183,7 @@ export default function Filter() {
             </div>
             {/* Buttons */}
             <div className="flex justify-between mt-3 mx-2">
-              <button onClick={() => handleClearFilters()} className="text-lg">
+              <button onClick={handleClearFilters} className="text-lg">
                 Clear All
               </button>
               <button

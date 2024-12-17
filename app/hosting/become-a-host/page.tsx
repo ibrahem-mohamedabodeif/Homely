@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: any) {
 
   return (
     <>
-      <NavBar user={user} />
+      <NavBar userData={userData} />
       <div className="mt-5 mx-20 max-sm:mx-4 mb-20">
         <div className="pb-10">
           <div className="flex items-center gap-4 pb-4">

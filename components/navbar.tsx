@@ -6,7 +6,7 @@ import AccountBar from "./accountBar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function NavBar({ user }: any) {
+export default function NavBar({ userData }: any) {
   const pathName = usePathname();
 
   const isAuthPage = pathName === "/signin" || pathName === "/signup";
@@ -48,7 +48,7 @@ export default function NavBar({ user }: any) {
               </Link>
             )}
             <div className="max-sm:hidden">
-              <AccountBar user={user} />
+              <AccountBar userData={userData || null} />
             </div>
           </div>
         </>

@@ -1,11 +1,11 @@
 import Image from "next/image";
 
-export default function HostedComp({hostedName}:any) {
+export default function HostedComp({hostedName,userData}:any) {
   return (
     <div className="flex items-center gap-5  border-b-2 pb-5 border-t-2 pt-5">
                 <div className="relative w-20 h-20 rounded-full overflow-hidden">
                   <Image
-                    src={"/65214d06-ffb4-4b70-93c0-01d368e76649.webp"}
+                    src={userData ? userData.user_image : "/user.png"}
                     alt="image"
                     width={200}
                     height={200}

@@ -22,7 +22,7 @@ export default async function Page({
 
   return (
     <div className="relative">
-      <NavBar user={user} />
+      <NavBar userData={userData} />
       <div className="grid grid-cols-12 mx-20 items-start">
         <div className="col-span-2 h-svh md:col-span-1 lg:col-span-2">
           <SideNav userData={userData} />

@@ -1,6 +1,6 @@
 import CardItem from "@/components/CardItem";
 import NavIcon from "@/components/navIcon";
-import { getAllRooms } from "@/lib/functions";
+import { checkAvailability, getAllRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -15,6 +15,8 @@ type searchType = {
     bedroomsNum?: number;
     price?: string;
     bedsNum?: number;
+    checkIn?: string;
+    checkOut?: string;
   };
 };
 
@@ -24,8 +26,16 @@ export default async function Home({ searchParams }: searchType) {
     data: { user },
   } = await supabase.auth.getUser();
   const rooms = await getAllRooms();
-  const { type, country, guestsNum, bedroomsNum, bedsNum, price } =
-    searchParams;
+  const {
+    type,
+    country,
+    guestsNum,
+    bedroomsNum,
+    bedsNum,
+    price,
+    checkIn,
+    checkOut,
+  } = searchParams;
 
   let filteredRooms = rooms;
 
@@ -43,6 +53,14 @@ export default async function Home({ searchParams }: searchType) {
     );
   }
 
+  if (checkIn && checkOut) {
+    const promises = filteredRooms.map(async (room) => {
+      const isAvailable = await checkAvailability(room.id, checkIn, checkOut);
+      return isAvailable ? room : null;
+    });
+    filteredRooms = (await Promise.all(promises)).filter(Boolean);
+  }
+  
   if (bedroomsNum) {
     filteredRooms = filteredRooms.filter(
       (room) => room.noBedroom === Number(bedroomsNum)

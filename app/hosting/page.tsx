@@ -7,15 +7,17 @@ import { Suspense } from "react";
 import Loader from "../loading";
 import NavBar from "@/components/navbar";
 import { createServerComponentClient } from "@/lib/server";
+import { getUserData } from "@/lib/functions";
 
 export default async function Page() {
   const supabase = createServerComponentClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const userData = await getUserData(user?.id);
   return (
     <>
-        <NavBar user={user} />
+        <NavBar userData={userData} />
     <div>
 
       {/* Host Invitation Section */}

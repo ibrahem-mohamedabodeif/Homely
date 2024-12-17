@@ -63,7 +63,8 @@ export default async function Page({ params, searchParams }: PageProps) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-const userData = await getUserData(user?.id);
+  let userData = null;
+ user && (userData = await getUserData(user?.id));
   const room: Room = await getRoomById(params.roomId);
 
   const {
@@ -86,7 +87,7 @@ const userData = await getUserData(user?.id);
 
   return (
     <>
-      <NavBar user={user||null} />
+      <NavBar userData={userData} />
       <div className="mx-20 mb-16">
         <Suspense fallback={<Loader />}>
           <RoomInfo user={user} room={room} roomId={params.roomId} />
@@ -94,7 +95,7 @@ const userData = await getUserData(user?.id);
         <div className="lg:grid lg:grid-cols-5 gap-40">
           <div className="col-span-3">
             <Suspense fallback={<Loader />}>
-              <HostedComp hostedName={hostedName} />
+              <HostedComp hostedName={hostedName} userData={userData} />
             </Suspense>
             <Suspense fallback={<Loader />}>
               <RoomDesc />
@@ -111,7 +112,7 @@ const userData = await getUserData(user?.id);
         </div>
         <div className="border-t-2 py-10">
           <Suspense fallback={<Loader />}>
-          <CommentsSec roomId={params.roomId}/>
+          <CommentsSec userData={userData} roomId={params.roomId}/>
           </Suspense>
         </div>
         <div className="border-t-2 py-5">

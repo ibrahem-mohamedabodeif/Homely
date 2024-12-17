@@ -1,6 +1,6 @@
 import BookCard from "@/components/bookCard";
 import BookForm from "@/components/bookForm";
-import { getRoomById } from "@/lib/functions";
+import { getRoomById, getUserData } from "@/lib/functions";
 import { Room } from "../[roomId]/page";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
@@ -28,7 +28,7 @@ export default async function page({ searchParams }: searchType) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
+const userData = await getUserData(user?.id);
   if (!user) {
     const params = new URLSearchParams(searchParams as any).toString();
     redirect(`/signin?${params}`);
@@ -44,7 +44,7 @@ export default async function page({ searchParams }: searchType) {
 
   return (
     <>
-    <NavBar user={user} />
+    <NavBar userData={userData} />
       <div className="lg:mx-20 mt-5 mb-24">
         <div className="flex items-center gap-4">
         <BackBtn />

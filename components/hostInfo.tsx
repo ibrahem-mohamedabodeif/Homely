@@ -8,7 +8,7 @@ export default function HostInfo({ userData }: any) {
         <div className="col-span-1 flex flex-col items-center border border-transparent p-10 rounded-3xl shadow-2xl">
           <div className="relative w-36 h-36 rounded-full overflow-hidden">
             <Image
-              src={"/65214d06-ffb4-4b70-93c0-01d368e76649.webp"}
+              src={userData.user_image}
               alt="image"
               fill={true}
               className="h-full rounded-full object-cover"

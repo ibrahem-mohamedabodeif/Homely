@@ -128,7 +128,7 @@ export async function addRoom(formData: FormData) {
   const room: Record<string, any> = {
     userId:formData.get("userId"),
     hostedName: userName,
-    country: formData.get("country"),
+    country: formData.get("country")?.toString().toLowerCase(),
     city: formData.get("city"),
     address: formData.get("address"),
     roomName: formData.get("roomName"),

@@ -1,7 +1,7 @@
 import BackBtn from "@/components/backBtn";
 import NavBar from "@/components/navbar";
 import WishListCard from "@/components/wishListCard";
-import { getWishRooms } from "@/lib/functions";
+import { getUserData, getWishRooms } from "@/lib/functions";
 import { createServerComponentClient } from "@/lib/server";
 import { redirect } from "next/navigation";
 
@@ -10,14 +10,14 @@ export default async function Page() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   if (!user) redirect("/signin");
+  const userData = await getUserData(user?.id);
 
   const wishRooms: any = await getWishRooms(user.id);
 
   return (
     <>
-    <NavBar user={user} />
+    <NavBar userData={userData} />
       <div className="lg:mx-20 mt-5">
         <div className="flex items-center gap-4 pb-10">
         <BackBtn/>
