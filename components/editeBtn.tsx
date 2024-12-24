@@ -5,7 +5,7 @@ import { MdEdit } from "react-icons/md";
 import PersonalInfoEdite from "./personalInfoEdite";
 import AboutInfoEdite from "./aboutInfoEdite";
 
-export default function EditeBtn({userData}:any) {
+export default function EditeBtn() {
   const pathName = usePathname();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
@@ -19,9 +19,9 @@ export default function EditeBtn({userData}:any) {
       {open && (
         <>
           {pathName === "/account" ? (
-            <PersonalInfoEdite onClose={handleClose} userData={userData}/>
+            <PersonalInfoEdite onClose={handleClose} />
           ) : pathName === "/account/about-you" ? (
-            <AboutInfoEdite onClose={handleClose} userData={userData}/>
+            <AboutInfoEdite onClose={handleClose} />
           ) : null}
         </>
       )}

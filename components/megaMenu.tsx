@@ -1,27 +1,35 @@
-import { signOut } from "@/lib/actions";
-import Link from "next/link";
 import ActiveLink from "./activeLink";
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
 
-export default function MegaMenu({ userData }: any) {
+export default function MegaMenu({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
+
   return (
     <div className="absolute right-0 flex flex-col items-start gap-4 border p-4 rounded-lg  bg-white shadow-xl z-10">
       <ActiveLink href={"/trips"}>
-        <span>Trips</span>
+        <button onClick={onClose}>Trips</button>
       </ActiveLink>
       <ActiveLink href={"/wishlist"}>
-        {" "}
-        <span>Wish list</span>
+        <button onClick={onClose}>Wish list</button>
       </ActiveLink>
       <ActiveLink href={"/account"}>
-        <span className=" after:content-[''] after:block after:mt-4 after:w-24 after:h-px after:bg-black">
+        <button
+          onClick={onClose}
+          className=" after:content-[''] after:block after:mt-4 after:w-24 after:h-px after:bg-black text-left"
+        >
           Account
-        </span>
+        </button>
       </ActiveLink>
-      {userData ? (
-        <button onClick={() => signOut()}>Logout</button>
-      ) : (
-        <Link href={"/signin"}>Sign In</Link>
-      )}
+      <SignedIn>
+        <SignOutButton>Log out</SignOutButton>
+      </SignedIn>
+      <SignedOut>
+        <SignInButton>Sign in</SignInButton>
+      </SignedOut>
+   
     </div>
   );
 }

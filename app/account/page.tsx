@@ -1,17 +1,12 @@
 import EditeBtn from "@/components/editeBtn";
-import { getUserData } from "@/lib/functions";
-import { createServerComponentClient } from "@/lib/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { CiCalendar, CiMail } from "react-icons/ci";
-import { MdEdit, MdLocalPhone } from "react-icons/md";
+import {  MdLocalPhone } from "react-icons/md";
 import { RiAccountCircleLine } from "react-icons/ri";
 
 export default async function Page() {
-  const supabase = createServerComponentClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+const user = await currentUser()
 
-  const userData = await getUserData(user?.id);
 
   return (
     <div>
@@ -20,7 +15,7 @@ export default async function Page() {
           <h1 className="text-2xl text-[#F5556C] font-medium pb-5">
             Personal Information
           </h1>
-          <EditeBtn userData={userData}/>
+          <EditeBtn/>
         </div>
         <p className="text-xl font-extralight">
           Manage your personal information ,including phone numbers and email
@@ -34,7 +29,7 @@ export default async function Page() {
             <RiAccountCircleLine size={25} />
           </div>
           <span className="text-lg font-extralight capitalize">
-            {userData.user_name}
+            {user?.firstName} {user?.lastName}
           </span>
         </div>
         <div className="border border-[#6e6e6e] p-5 rounded-lg">
@@ -43,8 +38,8 @@ export default async function Page() {
             <MdLocalPhone size={25} />
           </div>
           <span className="text-lg font-extralight">
-            {userData.user_phone
-              ? userData.user_phone
+            {user?.publicMetadata?.phoneNumber
+              ? user.publicMetadata.phoneNumber as string
               : "Add your phone number"}
           </span>
         </div>
@@ -53,7 +48,7 @@ export default async function Page() {
             <span className="text-lg font-medium"> Contactable at</span>
             <CiMail size={25} />
           </div>
-          <span className="text-lg font-extralight">{userData.user_email}</span>
+          <span className="text-lg font-extralight">{user?.primaryEmailAddress?.emailAddress}</span>
         </div>
         <div className="border border-[#6e6e6e] p-5 rounded-lg">
           <div className="pb-5 flex justify-between items-center">
@@ -61,8 +56,8 @@ export default async function Page() {
             <CiCalendar size={25} />
           </div>
           <span className="text-lg font-extralight">
-            {userData.user_birthDate
-              ? userData.user_birthDate
+            {user?.publicMetadata?.dateOfBirth
+              ? String(user.publicMetadata.dateOfBirth)
               : "Add your date of birth"}
           </span>
         </div>

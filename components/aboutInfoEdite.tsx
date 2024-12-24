@@ -1,10 +1,19 @@
+"use client";
+import { useUser } from "@clerk/nextjs";
+import { useActionState } from "react";
 import { updateUserInfo } from "@/lib/actions";
-import { useFormState } from "react-dom";
 
-export default function AboutInfoEdite({ onClose, userData }: { onClose: () => void; userData: any }) {
-  const [error, formAction] = useFormState(async (previousState: any, formData: FormData) => {
-    await updateUserInfo(previousState, formData);
-    onClose()
+export default function AboutInfoEdite({ onClose}: { onClose: () => void}) {
+  const {user} = useUser();
+  const handleClose = () => {
+    onClose();
+  } 
+  const [error, formAction] = useActionState(async (previousState: any, formData: FormData) => {
+    try{
+      await updateUserInfo(previousState, formData);
+      handleClose()}catch(e){
+        return {message:"An error occured, please try again"}
+      }
   }, null);
 
   return (
@@ -26,7 +35,7 @@ export default function AboutInfoEdite({ onClose, userData }: { onClose: () => v
               <textarea
                 name="about"
                 placeholder="Tell guests and hosts about you"
-                defaultValue={userData.user_about}
+                defaultValue={user?.publicMetadata?.about as string}
                 className="w-full outline-none mt-2 font-light resize-none"
               />
             </div>
@@ -37,7 +46,7 @@ export default function AboutInfoEdite({ onClose, userData }: { onClose: () => v
                 type="text"
                 name="work"
                 placeholder="Add your work"
-                defaultValue={userData.user_work}
+                defaultValue={user?.publicMetadata?.work as string}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>
@@ -48,7 +57,7 @@ export default function AboutInfoEdite({ onClose, userData }: { onClose: () => v
                 type="text"
                 name="languages"
                 placeholder="Add Languages"
-                defaultValue={userData.user_languages}
+                defaultValue={user?.publicMetadata?.languages as string}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>
@@ -59,7 +68,7 @@ export default function AboutInfoEdite({ onClose, userData }: { onClose: () => v
                 type="text"
                 name="hobbies"
                 placeholder="I’m obsessed with : ........"
-                defaultValue={userData.user_hobbies}
+                defaultValue={user?.publicMetadata?.hobbies as string}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>
@@ -68,9 +77,9 @@ export default function AboutInfoEdite({ onClose, userData }: { onClose: () => v
               <span className="pb-2 text-lg font-medium">Where I live</span>
               <input
                 type="text"
-                name="city"
-                placeholder="Add City"
-                defaultValue={userData.user_location}
+                name="address"
+                placeholder="Add your address"
+                defaultValue={user?.publicMetadata?.address as string}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>

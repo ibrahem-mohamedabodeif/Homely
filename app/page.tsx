@@ -1,12 +1,12 @@
-import CardItem from "@/components/CardItem";
+// import CardItem from "@/components/CardItem";
 import NavIcon from "@/components/navIcon";
-import { checkAvailability, getAllRooms } from "@/lib/functions";
-import { createServerComponentClient } from "@/lib/server";
-import Link from "next/link";
-import { Suspense } from "react";
-import Loader from "./loading";
+// import { checkAvailability, getAllRooms } from "@/lib/functions";
+// import { createServerComponentClient } from "@/lib/server";
+// import Link from "next/link";
+// import { Suspense } from "react";
+// import Loader from "./loading";
 import HeroSec from "@/components/heroSec";
-
+// import { auth } from "@/lib/auth";
 type searchType = {
   searchParams: {
     type?: string;
@@ -21,71 +21,70 @@ type searchType = {
 };
 
 export default async function Home({ searchParams }: searchType) {
-  const supabase = createServerComponentClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const rooms = await getAllRooms();
-  const {
-    type,
-    country,
-    guestsNum,
-    bedroomsNum,
-    bedsNum,
-    price,
-    checkIn,
-    checkOut,
-  } = searchParams;
+  // const rooms = await getAllRooms();
+  // const {
+  //   type,
+  //   country,
+  //   guestsNum,
+  //   bedroomsNum,
+  //   bedsNum,
+  //   price,
+  //   checkIn,
+  //   checkOut,
+  // } = searchParams;
 
-  let filteredRooms = rooms;
+  // let filteredRooms = rooms;
 
-  if (type) {
-    filteredRooms = filteredRooms.filter((room) => room.category === type);
-  }
+  // if (type) {
+  //   filteredRooms = filteredRooms.filter((room) => room.category === type);
+  // }
 
-  if (country) {
-    filteredRooms = filteredRooms.filter((room) => room.country === country);
-  }
+  // if (country) {
+  //   filteredRooms = filteredRooms.filter((room) => room.country === country);
+  // }
 
-  if (guestsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.guests === Number(guestsNum)
-    );
-  }
+  // if (guestsNum) {
+  //   filteredRooms = filteredRooms.filter(
+  //     (room) => room.guests === Number(guestsNum)
+  //   );
+  // }
 
-  if (checkIn && checkOut) {
-    const promises = filteredRooms.map(async (room) => {
-      const isAvailable = await checkAvailability(room.id, checkIn, checkOut);
-      return isAvailable ? room : null;
-    });
-    filteredRooms = (await Promise.all(promises)).filter(Boolean);
-  }
+  // if (checkIn && checkOut) {
+  //   const promises = filteredRooms.map(async (room) => {
+  //     const isAvailable = await checkAvailability(room.id, checkIn, checkOut);
+  //     return isAvailable ? room : null;
+  //   });
+  //   filteredRooms = (await Promise.all(promises)).filter(Boolean);
+  // }
   
-  if (bedroomsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.noBedroom === Number(bedroomsNum)
-    );
-  }
-  if (bedsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.noBed === Number(bedsNum)
-    );
-  }
+  // if (bedroomsNum) {
+  //   filteredRooms = filteredRooms.filter(
+  //     (room) => room.noBedroom === Number(bedroomsNum)
+  //   );
+  // }
+  // if (bedsNum) {
+  //   filteredRooms = filteredRooms.filter(
+  //     (room) => room.noBed === Number(bedsNum)
+  //   );
+  // }
 
-  if (price) {
-    if (price === "<200")
-      filteredRooms = filteredRooms.filter((room) => room.price <= 200);
-    else if (price === "<500")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.price > 200 && room.price <= 500
-      );
-    else if (price === "<1000")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.price > 500 && room.price <= 1000
-      );
-    else if (price === ">1000")
-      filteredRooms = filteredRooms.filter((room) => room.price >= 1000);
-  }
+  // if (price) {
+  //   if (price === "<200")
+  //     filteredRooms = filteredRooms.filter((room) => room.price <= 200);
+  //   else if (price === "<500")
+  //     filteredRooms = filteredRooms.filter(
+  //       (room) => room.price > 200 && room.price <= 500
+  //     );
+  //   else if (price === "<1000")
+  //     filteredRooms = filteredRooms.filter(
+  //       (room) => room.price > 500 && room.price <= 1000
+  //     );
+  //   else if (price === ">1000")
+  //     filteredRooms = filteredRooms.filter((room) => room.price >= 1000);
+  // }
+
+
+  
 
   return (
     <div className="relative">
@@ -95,7 +94,7 @@ export default async function Home({ searchParams }: searchType) {
         </div>
         <NavIcon />
       </div>
-      {!filteredRooms.length && (
+      {/* {!filteredRooms.length && (
         <div className="flex justify-center items-center mt-36 text-xl">
           There&apos;s no Rooms matching the filters
         </div>
@@ -104,11 +103,11 @@ export default async function Home({ searchParams }: searchType) {
         {filteredRooms?.map((room: any) => (
           <Link href={`/${room.id}`} key={room.id}>
             <Suspense fallback={<Loader />}>
-              <CardItem room={room} user={user} />
+              <CardItem room={room} userData={userData} />
             </Suspense>
           </Link>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

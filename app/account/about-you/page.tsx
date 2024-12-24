@@ -1,14 +1,9 @@
 import EditeBtn from "@/components/editeBtn";
-import { getUserData } from "@/lib/functions";
-import { createServerComponentClient } from "@/lib/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Page() {
-  const supabase = createServerComponentClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const userData = await getUserData(user?.id);
+ const user = await currentUser()
+ 
   return (
     <div>
       <div>
@@ -16,7 +11,7 @@ export default async function Page() {
           <h1 className="text-2xl text-[#F5556C] font-medium pb-5">
             About You
           </h1>
-          <EditeBtn userData={userData}/>
+          <EditeBtn/>
         </div>
         <p className="text-xl font-extralight">
           Help other guests and Hosts get to know you
@@ -26,28 +21,28 @@ export default async function Page() {
         <div className="col-span-2 flex flex-col border border-[#6e6e6e] p-5 rounded-lg">
           <span className="pb-5  text-lg font-medium"> About</span>
           <span className="text-lg font-extralight capitalize">
-            {userData.user_about ? userData.user_about : "Tell guests and hosts about you"}
+            {user?.publicMetadata.about ? String(user.publicMetadata.about) : "Tell guests and hosts about you"}
           </span>
         </div>
         <div className="flex flex-col border border-[#6e6e6e] p-5 rounded-lg">
           <span className="pb-5 text-lg font-medium"> My Work</span>
           <span className="text-lg font-extralight capitalize">
-            {userData.user_work ? userData.user_work : "Add your work"}
+            {user?.publicMetadata.work ? String(user.publicMetadata.work) : "Add your work"}
           </span>
         </div>
         <div className="flex flex-col border border-[#6e6e6e] p-5 rounded-lg">
           <span className="pb-5 text-lg font-medium">Languages</span>
-          <span className="text-lg font-extralight"> {userData.user_languages ? userData.user_languages : "Add Languages"}</span>
+          <span className="text-lg font-extralight"> {user?.publicMetadata.languages ? String(user.publicMetadata.languages) : "Add Languages"}</span>
         </div>
         <div className="flex flex-col border border-[#6e6e6e] p-5 rounded-lg">
           <span className="pb-5 text-lg font-medium"> Hobbies</span>
           <span className="text-lg font-extralight">
-            {userData.user_hobbies ? userData.user_hobbies : "I’m obsessed with : ........"}
+            {user?.publicMetadata.hobbies ?String(user.publicMetadata.hobbies) : "I’m obsessed with : ........"}
           </span>
         </div>
         <div className="flex flex-col border border-[#6e6e6e] p-5 rounded-lg">
           <span className="pb-5 text-lg font-medium"> Where I live</span>
-          <span className="text-lg font-extralight"> {userData.user_location ? userData.user_location : "Add City"}</span>
+          <span className="text-lg font-extralight"> {user?.publicMetadata.address ? String(user.publicMetadata.address) : "Add your Address"}</span>
         </div>
       </div>
     </div>

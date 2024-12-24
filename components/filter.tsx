@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CiFilter } from "react-icons/ci";
 
 interface Filters {
@@ -20,7 +20,6 @@ export default function Filter() {
   const [guestsNum, setGuestsNum] = useState<string>(searchParams.get("guestsNum") || "0");
   const [bedsNum, setBedsNum] = useState<string>(searchParams.get("bedsNum") || "0");
   const [bedroomsNum, setBedroomsNum] = useState<string>(searchParams.get("bedroomsNum") || "0");
-
 
   const handlePlus = (count: number, setCount: (count: string) => void) => {
     setCount((count + 1).toString());
@@ -61,19 +60,15 @@ export default function Filter() {
         className="flex items-center gap-2 border border-[#6e6e6e] rounded-full pt-2 pb-2 pl-3 pr-3 text-lg"
       >
         <CiFilter size={20} />
-        <span className="max-sm:hidden md:hidden max-lg:block lg:block tracking-wider">
-          Filters
-        </span>
+        <span className="hidden sm:block tracking-wider">Filters</span>
       </button>
       {open && (
         <div>
           <div className="fixed inset-0 bg-black opacity-60 z-10"></div>
-          <div className="w-[500px] h-fit overflow-y-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 fixed p-4 bg-white rounded-2xl shadow-2xl">
+          <div className="w-full max-w-md h-fit overflow-y-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 fixed p-4 bg-white rounded-2xl shadow-2xl">
             {/* Header */}
-            <div className="border-b border-[#6e6e6e] pb-4 ">
-              <h1 className="text-2xl text-center font-medium tracking-widest">
-                Filters
-              </h1>
+            <div className="border-b border-[#6e6e6e] pb-4">
+              <h1 className="text-2xl text-center font-medium tracking-widest">Filters</h1>
               <button
                 onClick={() => setOpen(!open)}
                 className="absolute top-4 right-6 text-2xl text-black"
@@ -82,9 +77,9 @@ export default function Filter() {
               </button>
             </div>
             {/* Price */}
-            <div className=" mt-2 space-y-6 border-[#6e6e6e]  border-b pb-7">
+            <div className="mt-2 space-y-6 border-[#6e6e6e] border-b pb-7">
               <h1 className="text-xl pl-2 tracking-wider">Price</h1>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <button
                   onClick={() => setPrice("<200")}
                   className={`border p-2 rounded-full ${price === "<200" && "bg-[#F5556C] text-white"}`}
@@ -113,9 +108,7 @@ export default function Filter() {
             </div>
             {/* Beds and Bedrooms */}
             <div className="mt-2 space-y-6 border-[#6e6e6e] border-b pb-7">
-              <h1 className="text-xl pl-2 tracking-wider">
-                Rooms and Bedrooms
-              </h1>
+              <h1 className="text-xl pl-2 tracking-wider">Rooms and Bedrooms</h1>
               <div className="flex justify-between mx-5">
                 <h1 className="text-lg font-light">Bedrooms</h1>
                 <div className="flex gap-5">
@@ -125,9 +118,7 @@ export default function Filter() {
                   >
                     -
                   </button>
-                  <span className="w-8 text-center">
-                    {bedroomsNum === "0" ? "Any" : bedroomsNum}
-                  </span>
+                  <span className="w-8 text-center">{bedroomsNum === "0" ? "Any" : bedroomsNum}</span>
                   <button
                     onClick={() => handlePlus(Number(bedroomsNum), setBedroomsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"
@@ -145,9 +136,7 @@ export default function Filter() {
                   >
                     -
                   </button>
-                  <span className="w-8 text-center">
-                    {bedsNum === "0" ? "Any" : bedsNum}
-                  </span>
+                  <span className="w-8 text-center">{bedsNum === "0" ? "Any" : bedsNum}</span>
                   <button
                     onClick={() => handlePlus(Number(bedsNum), setBedsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"
@@ -169,9 +158,7 @@ export default function Filter() {
                   >
                     -
                   </button>
-                  <span className="w-8 text-center">
-                    {guestsNum === "0" ? "Any" : guestsNum}
-                  </span>
+                  <span className="w-8 text-center">{guestsNum === "0" ? "Any" : guestsNum}</span>
                   <button
                     onClick={() => handlePlus(Number(guestsNum), setGuestsNum)}
                     className="border border-[#6e6e6e] pb-1 w-6 h-6 rounded-full flex items-center justify-center text-2xl"

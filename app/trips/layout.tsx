@@ -1,19 +1,15 @@
 import BackBtn from "@/components/backBtn";
 import NavBar from "@/components/navbar";
-import { getUserData } from "@/lib/functions";
-import { createServerComponentClient } from "@/lib/server";
-import { redirect } from "next/navigation";
+// import { getUserData } from "@/lib/actions";
+// import { createServerComponentClient } from "@/lib/server";
+// import { redirect } from "next/navigation";
 
 export default async function TripsLayout({ children }: { children: React.ReactNode }) {
-    const supabase = createServerComponentClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-  const userData = await getUserData(user?.id);
-    if (!user) redirect("/signin");
+//   const userData = await getUserData();
+//     if (!userData) redirect("/signin");
     return (
     <div>
-    <NavBar userData={userData} />
+    <NavBar />
       <div className="lg:mx-20 mt-5">
         <div className="flex items-center gap-4 pb-10">
         <BackBtn/>

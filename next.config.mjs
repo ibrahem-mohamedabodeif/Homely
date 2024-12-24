@@ -15,6 +15,7 @@ const nextConfig = {
         pathname: "/storage/v1/object/sign/avatars/**",
       },
     ],
+    domains: ["img.clerk.com"],
   },
 };
 

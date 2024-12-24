@@ -35,10 +35,10 @@ export default function NavIcon() {
       className={`${
         pathName !== "/"
           ? "hidden"
-          : "relative flex items-center justify-between pt-4 pb-4 border-b-2 border-[#6e6e6e] mx-20"
+          : "relative flex items-center justify-between pt-4 pb-4 border-b-2 border-[#6e6e6e] mx-4 lg:mx-20"
       }`}
     >
-      <div className="flex justify-around w-[calc(100%-80px)] flex-grow overflow-x-auto gap-12 pr-20 mr-20">
+      <div className="flex justify-around w-full flex-grow overflow-x-auto gap-4 lg:gap-12 pr-12 lg:pr-20">
         {filters.map(({ value, label, Icon }) => (
           <ActiveFilterBtn
             key={value}
@@ -46,7 +46,7 @@ export default function NavIcon() {
             value={value}
             onClick={() => handleFilterType(value)}
           >
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-2 min-w-[80px]">
               <Icon size={30} />
               <span className="text-xs font-medium">{label}</span>
             </div>

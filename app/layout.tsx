@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import Footer from "@/components/footer";
-import NavBar from "@/components/navbar";
-import NavIcon from "@/components/navIcon";
-import { createServerComponentClient } from "@/lib/server";
-import NavBarBottom from "@/components/navBarBottom";
-import HeroSec from "@/components/heroSec";
+import { ClerkProvider } from "@clerk/nextjs";
+// import { SessionProvider } from "next-auth/react";
+// import NavBar from "@/components/navbar";
+// import NavIcon from "@/components/navIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,22 +19,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = createServerComponentClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   return (
+    <ClerkProvider>
     <html lang="en">
       <body className={`${inter.className}`}>
+        {/* <SessionProvider> */}
         {children}
-        <div className="fixed -bottom-1 w-full lg:hidden md:hidden ">
+        {/* </SessionProvider> */}
+        {/* <div className="fixed -bottom-1 w-full lg:hidden md:hidden ">
           <NavBarBottom user={user} />
-        </div>
+        </div> */}
         <Toaster />
-        <footer>
-          <Footer />
-        </footer>
       </body>
     </html>
+    </ClerkProvider>
   );
 }

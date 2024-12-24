@@ -20,8 +20,9 @@ export default function SearchBar() {
       toast.error("Check-out date must be after check-in date.");
       return;
     }
-    if(checkIn && !checkOut || !checkIn && checkOut){
+    if ((checkIn && !checkOut) || (!checkIn && checkOut)) {
       toast.error("Check-in and check-out dates are required.");
+      return;
     }
 
     const params = new URLSearchParams(searchParams);
@@ -33,7 +34,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="flex items-center border border-[#e6e6e6] pt-3 pb-3 pl-4 pr-4 rounded-full w-full h-16 sm:w-auto bg-white">
+    <div className="flex items-center border border-[#e6e6e6] pt-3 pb-3 pl-4 pr-4 rounded-full max-w-sm lg:max-w-full md:max-w-full h-14 md:h-16 bg-white">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -41,7 +42,7 @@ export default function SearchBar() {
         }}
         className="flex w-full sm:flex-1"
       >
-        <div className="flex flex-col border-r-2 pl-3 gap-1 w-80">
+        <div className="flex flex-col border-r-2 pl-3 gap-1 lg:w-80 w-72">
           <label className="text-sm">Where</label>
           <input
             type="text"
@@ -50,7 +51,7 @@ export default function SearchBar() {
             onChange={(e) => setCountry(e.target.value)}
           />
         </div>
-        <div className="flex flex-col gap-1 border-r-2 pl-3 w-40">
+        <div className="hidden md:flex md:flex-col md:gap-1 md:border-r-2 md:pl-3 md:pr-4 md:w-40">
           <label className="text-sm">Check in</label>
           <input
             type="date"
@@ -58,7 +59,7 @@ export default function SearchBar() {
             onChange={(e) => setCheckIn(e.target.value)}
           />
         </div>
-        <div className="flex flex-col border-r-2 pl-3 gap-1 w-40">
+        <div className="hidden md:flex md:flex-col md:gap-1 md:border-r-2 md:pl-3 md:pr-4 md:w-40">
           <label className="text-sm">Check out</label>
           <input
             type="date"
@@ -66,7 +67,7 @@ export default function SearchBar() {
             onChange={(e) => setCheckOut(e.target.value)}
           />
         </div>
-        <div className="flex flex-col border-r-2 pl-3 gap-1 w-40">
+        <div className="hidden lg:flex lg:flex-col lg:gap-1 lg:border-r-2 lg:pl-3 lg:w-40">
           <label className="text-sm">Who</label>
           <input
             type="text"

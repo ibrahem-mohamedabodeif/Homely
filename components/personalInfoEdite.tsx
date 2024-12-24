@@ -1,14 +1,22 @@
 "use client";
+import { useUser } from "@clerk/nextjs";
+import { useActionState } from "react";
 import { updateUserInfo } from "@/lib/actions";
-import { useFormState } from "react-dom";
 import { CiCalendar, CiMail } from "react-icons/ci";
 import { MdLocalPhone } from "react-icons/md";
 import { RiAccountCircleLine } from "react-icons/ri";
 
-export default function PersonalInfoEdite({onClose, userData}:{onClose:()=>void, userData:any}) {
-  const [error, formAction] = useFormState(async (previousState: any, formData: FormData) => {
+export default function PersonalInfoEdite({onClose}:{onClose:()=>void}) {
+  const {user} = useUser(); 
+  const handleClose = () => {
+    onClose();
+  } 
+  const [error, formAction] = useActionState(async (previousState: any, formData: FormData) => {
+    try{
     await updateUserInfo(previousState, formData);
-    onClose()
+    handleClose()}catch(e){
+      return {message:"An error occured, please try again"}
+    }
   }, null);
 
   return (
@@ -34,9 +42,22 @@ export default function PersonalInfoEdite({onClose, userData}:{onClose:()=>void,
               </div>
               <input
                 type="text"
-                name="user_name"
-                placeholder="name"
-                defaultValue={userData.user_name}
+                name="firstName"
+                placeholder="First Name"
+                defaultValue={user?.firstName || ""}
+                className="w-full outline-none mt-2 font-light"
+              />
+            </div>
+            <div className="border border-[#6e6e6e] p-3 rounded-lg">
+              <div className="pb-2 flex justify-between items-center">
+                <span className="text-base font-normal">Name</span>
+                <RiAccountCircleLine size={25} />
+              </div>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="last Name"
+                defaultValue={user?.lastName || ""}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>
@@ -48,19 +69,11 @@ export default function PersonalInfoEdite({onClose, userData}:{onClose:()=>void,
               </div>
               <input
                 type="text"
-                name="phone_number"
+                name="phoneNumber"
                 placeholder="Add your phone number"
-                defaultValue={userData.user_phone}
+                defaultValue={user?.publicMetadata?.phoneNumber as string || ""}
                 className="w-full outline-none mt-2 font-light"
               />
-            </div>
-            {/* Email input */}
-            <div className="border border-[#6e6e6e] p-3 rounded-lg">
-              <div className="pb-2 flex justify-between items-center">
-                <span className="text-base font-normal"> E-mail</span>
-                <CiMail size={25} />
-              </div>
-              <span className="text-base font-extralight">{userData.user_email}</span>
             </div>
             {/* Date of Birth input */}
             <div className="border border-[#6e6e6e] p-3 rounded-lg">
@@ -70,15 +83,24 @@ export default function PersonalInfoEdite({onClose, userData}:{onClose:()=>void,
               </div>
               <input
                 type="date"
-                name="date_of_birth"
-                defaultValue={userData.user_birthDate}
+                name="birthDate"
+                defaultValue={ user?.publicMetadata?.dateOfBirth as string}
                 className="w-full outline-none mt-2 font-light"
               />
             </div>
+            {/* Email input */}
+            <div className="col-span-2 border border-[#6e6e6e] p-3 rounded-lg">
+              <div className="pb-2 flex justify-between items-center">
+                <span className="text-base font-normal"> E-mail</span>
+                <CiMail size={25} />
+              </div>
+              <span className="text-base font-extralight">{user?.primaryEmailAddress?.emailAddress}</span>
+            </div>
           </div>
+          {error && <div className="text-red-500 text-sm mt-2">{error.message}</div>}
           {/* Buttons */}
           <div className="flex justify-between mt-10 mx-2">
-            <button onClick={onClose} className="text-base">Cancel</button>
+            <button onClick={handleClose} className="text-base">Cancel</button>
             <button type="submit" className="text-base border rounded-full pt-2 pb-2 pl-5 pr-5 bg-[#1D201F] text-white">
               Save Changes
             </button>
