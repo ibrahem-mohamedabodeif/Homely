@@ -2,10 +2,10 @@
 
 // import { addComment } from "@/lib/actions";
 // import { getComments } from "@/lib/functions";
+// import { clerkClient } from "@clerk/nextjs/server";
 // import {  formatDistanceToNow } from "date-fns";
 // import Image from "next/image";
-// import { useEffect, useRef, useState } from "react";
-// import { useFormState, useFormStatus } from "react-dom";
+// import { useActionState, useEffect, useRef, useState } from "react";
 // import { IoMdSend } from "react-icons/io";
 
 // type Comment = {
@@ -17,12 +17,13 @@
 
 // type CommentsSecProps = {
 //   roomId: string;
-//   userData: any;
+//   userId: string;
 // };
 
-// export default function CommentsSec({ roomId, userData }: CommentsSecProps) {
+// export default function CommentsSec({ roomId, userId}: CommentsSecProps) {
 //   const [comments, setComments] = useState<Comment[]>([]);
-//   const [error, formAction] = useFormState(async (previousState: any, formData: FormData) => {
+//   const [user, setUser] = useState<any>();
+//   const [error, formAction] = useActionState(async (previousState: any, formData: FormData) => {
 //     await addComment(previousState, formData);
 //     if(textareaRef.current) textareaRef.current.value = '';
 //   }, null);
@@ -35,8 +36,13 @@
 //       setComments(data);
 //     };
 
+//     const getUser = async () =>{
+//       const user = await (await clerkClient()).users.getUser(userId);
+//       setUser(user);
+//     }
+// getUser();
 //     fetchComments();
-//   }, [roomId, comments]);
+//   }, [roomId, comments,userId]);
 
 //   return (
 //     <div className="grid grid-cols-3 gap-10">
@@ -44,7 +50,7 @@
 //       <div className="flex items-start gap-3">
 //         <div className="relative w-12 h-12 rounded-full overflow-hidden">
 //           <Image
-//             src={userData.user_image}
+//             src={user? user.imageUrl : "/user.png"}
 //             alt="image"
 //             width={200}
 //             height={200}
@@ -53,6 +59,7 @@
 //         </div>
 //         <form action={formAction} className="relative w-full">
 //           <input type="hidden" name="roomId" value={roomId} />
+//           <input type="hidden" name="userId" value={userId} />
 //           <textarea
 //             placeholder="Write your comment"
 //             name="comment"
@@ -71,7 +78,7 @@
 //           <div className="flex items-center gap-2">
 //             <div className="relative w-12 h-12 rounded-full overflow-hidden">
 //               <Image
-//                 src={userData.user_image}
+//                 src={user.imageUrl}
 //                 alt="Profile image"
 //                 width={200}
 //                 height={200}

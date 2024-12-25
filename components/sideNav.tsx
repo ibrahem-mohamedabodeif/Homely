@@ -28,7 +28,6 @@ export default function SideNav() {
           setImagePreview(user.imageUrl); // This line is for extra safety
         }
       } catch (error) {
-        console.error("Error updating profile image:", error);
         alert("Failed to update profile image. Please try again.");
       }
     }
@@ -44,7 +43,7 @@ export default function SideNav() {
     <div className="flex flex-col items-start gap-5">
       <div className="flex flex-col items-center mb-10">
         <div className="relative">
-          <div className="relative w-32 h-32 overflow-hidden bg-white rounded-full mt-5">
+          <div className="relative w-32 h-32 overflow-hidden bg-white rounded-full md:mt-5">
             <Image src={imagePreview} alt="Profile image" fill sizes="100" />
           </div>
           <button
@@ -62,10 +61,11 @@ export default function SideNav() {
             className="hidden"
           />
         </div>
-        <span className="text-xl font-light capitalize mt-10">
+        <span className="md:text-xl md:font-light md:capitalize md:mt-10 hidden md:block">
           {user?.username || user?.firstName || "User"}
         </span>
       </div>
+      <div className="hidden md:flex md:flex-col md:gap-4">
       <ActiveLink href="/account">
         <span className="text-lg font-light">Personal Information</span>
       </ActiveLink>
@@ -83,6 +83,7 @@ export default function SideNav() {
           <ActiveLink href="/account/homely-rooms/bookings">
             <span className="text-lg font-light">Bookings</span>
           </ActiveLink>
+          </div>
         </div>
       </div>
     </div>

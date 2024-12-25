@@ -1,7 +1,6 @@
 import SideNav from "@/components/sideNav";
 import { Suspense } from "react";
 import NavBar from "@/components/navbar";
-import { redirect } from "next/navigation";
 import Loading from "../loading";
 
 export default async function Page({
@@ -15,12 +14,12 @@ export default async function Page({
   return (
     <div className="relative">
       <NavBar />
-      <div className="grid grid-cols-12 mx-20 items-start">
-        <div className="col-span-2 h-svh md:col-span-1 lg:col-span-2">
+      <div className="md:grid md:grid-cols-12 flex flex-col mx-5 md:mx-20 md:items-start">
+        <div className="md:col-span-2 md:h-svh justify-center mx-auto">
           <SideNav />
         </div>
         <Suspense fallback={<Loading />}>
-          <div className="ml-20 col-span-10">{children}</div>
+          <div className="w-full md:ml-20 md:col-span-10 md:w-auto mb-10 md:mb-auto">{children}</div>
         </Suspense>
       </div>
     </div>

@@ -15,15 +15,15 @@ export default function NavBar() {
   return (
     <div
       className={`${
-        isAuthPage ? "hidden" : "flex justify-between items-center pt-3 pb-4 mx-4 lg:mx-20"
-      } ${isHomePage ? "flex justify-center" : "hidden lg:flex"}`}
+        isAuthPage ? "hidden" : "flex justify-between items-center pt-0 pb-4 mx-4 lg:mx-20"
+      } ${isHomePage ? "flex justify-center" : ""}`}
     >
       {!isAuthPage && (
         <>
           <Link href={"/"}>
             <div className="flex items-center">
               <Image src={logo} alt="logo" width={70} className="" priority={true} />
-              <h1 className="text-2xl font-bold tracking-wide text-[#F5556C] hidden lg:block">
+              <h1 className="text-2xl font-bold tracking-wide text-[#F5556C] hidden md:block">
                 Homely
               </h1>
             </div>

@@ -3,9 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ClerkProvider } from "@clerk/nextjs";
-// import { SessionProvider } from "next-auth/react";
-// import NavBar from "@/components/navbar";
-// import NavIcon from "@/components/navIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,17 +18,12 @@ export default async function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body className={`${inter.className}`}>
-        {/* <SessionProvider> */}
-        {children}
-        {/* </SessionProvider> */}
-        {/* <div className="fixed -bottom-1 w-full lg:hidden md:hidden ">
-          <NavBarBottom user={user} />
-        </div> */}
-        <Toaster />
-      </body>
-    </html>
+      <html lang="en">
+        <body className={`${inter.className}`}>
+          {children}
+          <Toaster />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import MegaMenu from "./megaMenu";
 import Image from "next/image";
@@ -9,8 +9,12 @@ import { useUser } from "@clerk/nextjs";
 export default function AccountBar() {
   const {user }= useUser()
   const [open, setOpen] = useState(false);
-  const [userImage, setUserImage] = useState<string>(user?.imageUrl ||"/user.png");
-
+  const [userImage, setUserImage] = useState<string>("/user.png");
+useEffect(() =>{
+  if(user?.imageUrl){
+    setUserImage(user.imageUrl)
+  }
+ },[user])
   return (
     <div className="relative">
       <button

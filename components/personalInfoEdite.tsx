@@ -22,7 +22,7 @@ export default function PersonalInfoEdite({onClose}:{onClose:()=>void}) {
   return (
     <div>
       <div className="fixed inset-0 bg-black opacity-60 z-10"></div>
-      <div className="w-[600px] h-fit overflow-y-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 fixed p-5 bg-white rounded-2xl shadow-2xl">
+      <div className="w-[90%] max-w-sm md:max-w-fit max-h-[90vh] overflow-y-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 fixed p-5 bg-white rounded-2xl shadow-2xl">
         {/* Header */}
         <div>
           <h1 className="text-2xl text-center text-[#F5556C] font-medium border-b border-[#6e6e6e] pb-4">
@@ -33,11 +33,11 @@ export default function PersonalInfoEdite({onClose}:{onClose:()=>void}) {
         </h4>
         </div>
         <form action={formAction}>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-5 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-5 mt-8">
             {/* Name input */}
             <div className="border border-[#6e6e6e] p-3 rounded-lg">
               <div className="pb-2 flex justify-between items-center">
-                <span className="text-base font-normal">Name</span>
+                <span className="text-base font-normal">First Name</span>
                 <RiAccountCircleLine size={25} />
               </div>
               <input
@@ -50,7 +50,7 @@ export default function PersonalInfoEdite({onClose}:{onClose:()=>void}) {
             </div>
             <div className="border border-[#6e6e6e] p-3 rounded-lg">
               <div className="pb-2 flex justify-between items-center">
-                <span className="text-base font-normal">Name</span>
+                <span className="text-base font-normal">Last Name</span>
                 <RiAccountCircleLine size={25} />
               </div>
               <input
@@ -89,7 +89,7 @@ export default function PersonalInfoEdite({onClose}:{onClose:()=>void}) {
               />
             </div>
             {/* Email input */}
-            <div className="col-span-2 border border-[#6e6e6e] p-3 rounded-lg">
+            <div className="col-span-1 md:col-span-2 border border-[#6e6e6e] p-3 rounded-lg">
               <div className="pb-2 flex justify-between items-center">
                 <span className="text-base font-normal"> E-mail</span>
                 <CiMail size={25} />
