@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const { roomId } = await params;
+  const { roomId } =  params;
 
   const searchParamsData = await searchParams;
   const room: Room = await getRoomById(roomId);
