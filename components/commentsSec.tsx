@@ -9,7 +9,8 @@ type CommentsSecProps = {
 };
 
 export default async function CommentsSec({ roomId }: CommentsSecProps) {
-  const comments = await getComments(roomId);
+  const Id = await roomId;
+  const comments = await getComments(Id);
   const commentsWithUserData = await Promise.all(
     comments.map(async (comment) => {
       if(comment.user_id){

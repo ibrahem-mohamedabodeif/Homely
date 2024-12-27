@@ -22,7 +22,7 @@ export default async function RoomInfo({...props}:any) {
         room_category,
         address
       } = props.room;
-      const roomId = await props.room.id;
+      const roomId =  props.room.id;
 
 
 

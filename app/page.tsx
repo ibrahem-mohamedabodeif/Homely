@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import Loader from "./loading";
 import HeroSec from "@/components/heroSec";
 type searchType = {
-  searchParams: {
+  searchParams:Promise< {
     type?: string;
     country?: string;
     guestsNum?: number;
@@ -15,7 +15,7 @@ type searchType = {
     bedsNum?: number;
     checkIn?: string;
     checkOut?: string;
-  };
+  }>;
 };
 
 export default async function Home({ searchParams }: searchType) {

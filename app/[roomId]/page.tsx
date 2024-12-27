@@ -33,14 +33,13 @@ export type Room = {
 };
 
 type PageProps = {
-  params: {
-    roomId: string;
-  };
-  searchParams: {
+  params: Promise<{ roomId: string }>;
+
+  searchParams: Promise<{
     startDay: string;
     endDay: string;
     nights: number;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -52,7 +51,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const { roomId } =  params;
+  const { roomId } = await params;
 
   const searchParamsData = await searchParams;
   const room: Room = await getRoomById(roomId);
@@ -78,7 +77,7 @@ export default async function Page({ params, searchParams }: PageProps) {
           </div>
           <Suspense fallback={<Loader />}>
             <div className="col-span-2 mt-10">
-              <CheckForm room={room} searchParamsData={searchParamsData} />
+              <CheckForm room={room} searchParams={searchParamsData} />
             </div>
           </Suspense>
         </div>

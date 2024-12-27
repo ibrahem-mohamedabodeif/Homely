@@ -7,9 +7,9 @@ import Image from "next/image";
 export default async function TripInfo({
   params,
 }: {
-  params: { tripId: number };
+  params:Promise< { tripId: number }>;
 }) {
-  const tripId = params.tripId;
+  const tripId = (await params).tripId;
 
   const tripInfo = await getHomelyBookingsInfo(tripId);
   

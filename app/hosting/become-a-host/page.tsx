@@ -6,11 +6,11 @@ import { getRoomById } from "@/lib/functions";
 import { currentUser } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 
-export default async function Page({ searchParams }: { searchParams: { edite?: string } }) {
+export default async function Page({ searchParams }: { searchParams:Promise< { edite?: string }> }) {
  
   const user = await currentUser();
 
-  const roomId = searchParams.edite;
+  const roomId = (await searchParams).edite;
   const roomEdite = roomId ? await getRoomById(roomId) : null;
 
   return (

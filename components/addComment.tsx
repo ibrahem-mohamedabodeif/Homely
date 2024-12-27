@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { addComment } from "@/lib/actions";
-import { useActionState, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { IoMdSend } from "react-icons/io";
 import { useUser } from "@clerk/nextjs";
 
@@ -9,7 +9,8 @@ type AddCommentProps = {
   roomId: string;
 };
 
-export default function AddComment({ roomId }: AddCommentProps) {
+export default function AddComment({ roomId}: AddCommentProps) {
+  
   const {user} = useUser()
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

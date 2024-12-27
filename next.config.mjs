@@ -14,8 +14,14 @@ const nextConfig = {
         port: "",
         pathname: "/storage/v1/object/sign/avatars/**",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+        port: "",
+        pathname: '/**',
+      },
+
     ],
-    domains: ["img.clerk.com"],
   },
 };
 
