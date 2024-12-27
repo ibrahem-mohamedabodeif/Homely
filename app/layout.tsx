@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ClerkProvider } from "@clerk/nextjs";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,9 @@ export default async function RootLayout({
         <body className={`${inter.className}`}>
           {children}
           <Toaster />
+        <footer className="relative bottom-0 h-full ">
+        <Footer/>
+        </footer>
         </body>
       </html>
     </ClerkProvider>

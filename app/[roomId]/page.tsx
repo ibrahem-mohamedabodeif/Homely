@@ -8,7 +8,7 @@ import RoomInfo from "@/components/roomInfo";
 import HostedComp from "@/components/hostedComp";
 import RoomDesc from "@/components/roomDesc";
 import SelectDates from "@/components/selectDates";
-// import CommentsSec from "@/components/commentsSec";
+import CommentsSec from "@/components/commentsSec";
 import HostInfo from "@/components/hostInfo";
 
 export type Room = {
@@ -28,8 +28,8 @@ export type Room = {
   bathrooms_num: number;
   beds_num: number;
   bedrooms_num: number;
-  room_category:string;
-  address:string
+  room_category: string;
+  address: string;
 };
 
 type PageProps = {
@@ -56,6 +56,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const searchParamsData = await searchParams;
   const room: Room = await getRoomById(roomId);
+
   return (
     <>
       <NavBar />
@@ -72,23 +73,23 @@ export default async function Page({ params, searchParams }: PageProps) {
               <RoomDesc />
             </Suspense>
             <Suspense fallback={<Loader />}>
-              <SelectDates searchParams={searchParams} />
+              <SelectDates searchParams={searchParamsData} />
             </Suspense>
           </div>
-            <Suspense fallback={<Loader />}>
-              <div className="col-span-2 mt-10">
-                <CheckForm room={room} searchParamsData={searchParamsData} />
-              </div>
-            </Suspense>
-        </div>
-        {/* <div className="border-t-2 py-10">
           <Suspense fallback={<Loader />}>
-          <CommentsSec userId={room.user_id} roomId={roomId}/>
+            <div className="col-span-2 mt-10">
+              <CheckForm room={room} searchParamsData={searchParamsData} />
+            </div>
           </Suspense>
-        </div> */}
+        </div>
+        <div className="border-t-2 py-10">
+          <Suspense fallback={<Loader />}>
+            <CommentsSec roomId={roomId} />
+          </Suspense>
+        </div>
         <div className="border-t-2 py-5">
           <Suspense fallback={<Loader />}>
-          <HostInfo userId={room.user_id}/>
+            <HostInfo userId={room.user_id} />
           </Suspense>
         </div>
         <Suspense fallback={<Loader />}>

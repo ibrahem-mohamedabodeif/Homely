@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { checkAvailability } from "@/lib/functions";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 type CheckParams = {
   room: {
@@ -17,9 +18,11 @@ type CheckParams = {
   };
 };
 
-export default function CheckForm({ room, searchParamsData }: CheckParams) {
-  const { startDay, endDay, nights } = searchParamsData;
-  const [numGuests, setNumGuests] = useState(1);
+export default function CheckForm({ room }: CheckParams) {
+  const searchParams = useSearchParams()
+  const startDay = searchParams.get("startDay") || "";
+  const endDay = searchParams.get("endDay") || "";
+  const nights = parseInt(searchParams.get("nights") || "0", 10);  const [numGuests, setNumGuests] = useState(1);
   const cleaningFee = 130.19;
   const serviceFee = 118.89;
 

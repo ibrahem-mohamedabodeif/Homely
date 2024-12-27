@@ -7,8 +7,8 @@ export default async function HostInfo({ userId }:{userId:string}) {
   return (
     <div>
       <h1 className="text-2xl font-medium mb-10"> Meet your Host</h1>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-20 justify-between items-start">
-        <div className="col-span-1 md:col-span-2 flex flex-col items-center border border-transparent p-10 rounded-3xl shadow-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-20 justify-between items-start">
+        <div className="col-span-1 flex flex-col items-center border border-transparent p-10 rounded-3xl shadow-2xl">
           <div className="relative w-36 h-36 rounded-full overflow-hidden">
             <Image
               src={user.imageUrl}

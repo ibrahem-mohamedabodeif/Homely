@@ -1,9 +1,9 @@
-import { GoShare } from "react-icons/go";
 import SaveButton from "./saveButton";
 import { CiHeart } from "react-icons/ci";
 import { Suspense } from "react";
 import ImageComponent from "./imageComponent";
 import Loader from "@/app/loading";
+import ShareBtn from "./shareBtn";
 
 export default async function RoomInfo({...props}:any) {
     const {
@@ -23,16 +23,18 @@ export default async function RoomInfo({...props}:any) {
         address
       } = props.room;
       const roomId = await props.room.id;
+
+
+
+      
+
   return (
     <>
     <div className="flex justify-between mb-10 w-full">
           <h1 className="text-xl md:text-2xl font-medium capitalize">{room_name},{country}</h1>
           <div className="flex gap-5 items-center">
-            <div className="flex items-center gap-2 ">
-              <GoShare size={22} />
-              <span className="capitalize text-lg">share</span>
-            </div>
-
+            
+<ShareBtn room_name={room_name} room_category={room_category} city={city} country ={country}/>
             <div className="flex items-center gap-1 ">
               <SaveButton roomId={roomId}>
                 <CiHeart size={25} />

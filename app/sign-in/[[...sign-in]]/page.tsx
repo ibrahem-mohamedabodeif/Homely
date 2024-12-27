@@ -3,18 +3,34 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  
+  const getRedirectUrl = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    const redirectUrl = params.get('redirect_url');
+    if (redirectUrl) {
+      return redirectUrl;
+    }
+    params.delete('redirect_url');
+  };
+
   return (
     <div className="grid w-full flex-grow items-center my-10 px-4 sm:justify-center">
-      <SignIn.Root>
+     <SignIn.Root 
+        path={getRedirectUrl()} 
+        
+      >
         <SignIn.Step
           name="start"
           className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:w-96 sm:px-8"
         >
           <header className="text-center">
             <Image
-              src={"/favicon.ico"}
+              src="/favicon.ico"
               alt="LOGO"
               width={150}
               height={150}
@@ -40,7 +56,7 @@ export default function SignInPage() {
               <Clerk.FieldError className="block text-sm text-red-400" />
             </Clerk.Field>
             <Clerk.Field name="password" className="space-y-2">
-              <Clerk.Label className="text-sm  font-medium text-zinc-950">
+              <Clerk.Label className="text-sm font-medium text-zinc-950">
                 Password
               </Clerk.Label>
               <Clerk.Input

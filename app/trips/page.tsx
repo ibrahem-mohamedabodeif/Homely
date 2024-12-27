@@ -14,7 +14,7 @@ export default async function Page() {
           No reservations yet
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-10  mb-24 mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-10  mb-24 md:mx-10">
           {reservationRooms.map((room) => (
             <ReservationCard room={room} key={room.id} />
           ))}

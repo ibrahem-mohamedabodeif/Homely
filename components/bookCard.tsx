@@ -24,10 +24,9 @@ type pageProp = {
 export default async function BookCard({ room, searchParams }: pageProp) {
   const nights = (await searchParams).nights;
   const price = Number(room.room_price);
-  const cleaningFee = await Number(searchParams.cleaningFee);
-  const serviceFee = await Number(searchParams.serviceFee);
+  const cleaningFee = (await searchParams).cleaningFee;
+  const serviceFee = (await searchParams).serviceFee;
 
-  const total = Math.ceil(price * nights + cleaningFee + serviceFee);
 
   return (
     <div className="max-w-full md:max-w-2xl border border-[#6e6e6e] p-6 rounded-3xl bg-white">

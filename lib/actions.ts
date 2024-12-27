@@ -5,41 +5,49 @@ import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { redirect } from "next/navigation";
 
-type bookingData = {
-  roomId: string;
-  startDay: string;
-  endDay: string;
-  nights: number;
-  guests: number;
-  totalPrice: number;
-  serviceFee: number;
-  cleaningFee: number
-}
-
 export async function updateUserInfo(previousState: any, formData: FormData) {
-  const user =await currentUser()
+  const user = await currentUser();
   const updatedUser = {
-    firstName: formData.get("firstName")?.toString() || user?.firstName || undefined,
-    lastName: formData.get("lastName")?.toString() || user?.lastName || undefined,
+    firstName:
+      formData.get("firstName")?.toString() || user?.firstName || undefined,
+    lastName:
+      formData.get("lastName")?.toString() || user?.lastName || undefined,
     publicMetadata: {
-      phoneNumber : formData.get("phoneNumber")?.toString() || user?.publicMetadata.phoneNumber?.toString(),
-      dateOfBirth: formData.get("birthDate")?.toString() || user?.publicMetadata?.dateOfBirth?.toString(),
-      about: formData.get("about")?.toString() || user?.publicMetadata.about?.toString(),
-      work: formData.get("work")?.toString() || user?.publicMetadata.work?.toString(),
-      languages: formData.get("languages")?.toString() || user?.publicMetadata.languages?.toString(),
-      hobbies: formData.get("hobbies")?.toString() || user?.publicMetadata.hobbies?.toString(),
-      address: formData.get("address")?.toString() || user?.publicMetadata.address?.toString(),
-    }
-  }
+      phoneNumber:
+        formData.get("phoneNumber")?.toString() ||
+        user?.publicMetadata.phoneNumber?.toString(),
+      dateOfBirth:
+        formData.get("birthDate")?.toString() ||
+        user?.publicMetadata?.dateOfBirth?.toString(),
+      about:
+        formData.get("about")?.toString() ||
+        user?.publicMetadata.about?.toString(),
+      work:
+        formData.get("work")?.toString() ||
+        user?.publicMetadata.work?.toString(),
+      languages:
+        formData.get("languages")?.toString() ||
+        user?.publicMetadata.languages?.toString(),
+      hobbies:
+        formData.get("hobbies")?.toString() ||
+        user?.publicMetadata.hobbies?.toString(),
+      address:
+        formData.get("address")?.toString() ||
+        user?.publicMetadata.address?.toString(),
+    },
+  };
 
-  if(user){
-    (await clerkClient()).users.updateUser(user.id, updatedUser)
+  if (user) {
+    (await clerkClient()).users.updateUser(user.id, updatedUser);
   }
-  revalidatePath("/account")
-  return updatedUser
+  revalidatePath("/account");
+  return updatedUser;
 }
 
-export async function addRoom(previousState:any,formData: FormData) :Promise<void> {
+export async function addRoom(
+  previousState: any,
+  formData: FormData
+): Promise<void> {
   const user = await currentUser();
   const room: Record<string, any> = {
     user_id: user?.id,
@@ -65,7 +73,9 @@ export async function addRoom(previousState:any,formData: FormData) :Promise<voi
       .upload(imageName, imageFile);
 
     if (storageError) {
-      throw new Error(`Failed to upload image ${index + 1}: ${storageError.message}`);
+      throw new Error(
+        `Failed to upload image ${index + 1}: ${storageError.message}`
+      );
     }
 
     const { data: signedUrlData, error: urlError } = await supabase.storage
@@ -73,7 +83,11 @@ export async function addRoom(previousState:any,formData: FormData) :Promise<voi
       .createSignedUrl(imageName, 60 * 60 * 24 * 365);
 
     if (urlError) {
-      throw new Error(`Failed to generate signed URL for image ${index + 1}: ${urlError.message}`);
+      throw new Error(
+        `Failed to generate signed URL for image ${index + 1}: ${
+          urlError.message
+        }`
+      );
     }
 
     return signedUrlData.signedUrl;
@@ -85,20 +99,20 @@ export async function addRoom(previousState:any,formData: FormData) :Promise<voi
     room[imageKey] = imageFile ? await uploadImage(imageFile, i) : null;
   }
 
-  const { data, error } = await supabase
-    .from("rooms")
-    .insert([room])
-    .select();
+  const { data, error } = await supabase.from("rooms").insert([room]).select();
 
   if (error) {
     throw new Error("Failed to insert room details: " + error.message);
   }
-  revalidatePath("/","layout")
-  revalidatePath("/account/homley-rooms")
+  revalidatePath("/", "layout");
+  revalidatePath("/account/homley-rooms");
   redirect("/account/homely-rooms");
 }
 
-export async function updateRoom(previousState:any,formData: FormData) :Promise<void>{
+export async function updateRoom(
+  previousState: any,
+  formData: FormData
+): Promise<void> {
   const roomId = formData.get("roomId") as string;
   const user = await currentUser();
 
@@ -139,7 +153,9 @@ export async function updateRoom(previousState:any,formData: FormData) :Promise<
       .upload(imageName, imageFile);
 
     if (storageError) {
-      throw new Error(`Failed to upload image ${index + 1}: ${storageError.message}`);
+      throw new Error(
+        `Failed to upload image ${index + 1}: ${storageError.message}`
+      );
     }
 
     const { data: signedUrlData, error: urlError } = await supabase.storage
@@ -147,7 +163,11 @@ export async function updateRoom(previousState:any,formData: FormData) :Promise<
       .createSignedUrl(imageName, 60 * 60 * 24 * 365); // 1 year expiration
 
     if (urlError) {
-      throw new Error(`Failed to generate signed URL for image ${index + 1}: ${urlError.message}`);
+      throw new Error(
+        `Failed to generate signed URL for image ${index + 1}: ${
+          urlError.message
+        }`
+      );
     }
 
     return signedUrlData.signedUrl;
@@ -177,69 +197,59 @@ export async function updateRoom(previousState:any,formData: FormData) :Promise<
   if (error) {
     throw new Error("Failed to update room details: " + error.message);
   }
-  revalidatePath("/","layout")
-  revalidatePath("/account/homley-rooms")
+  revalidatePath("/", "layout");
+  revalidatePath("/account/homley-rooms");
   redirect("/account/homely-rooms");
 }
 
-
-export async function createReservation(bookingData: bookingData, formData: FormData) {
-
+export async function createReservation(
+  previousState: any,
+  formData: FormData
+) {
   const newBooking = {
-    client_name: formData.get("fullName"),
-    client_email: formData.get("email"),
-    client_phone: Number(formData.get("number")),
-    client_idNum: Number(formData.get("idNumber")),
-    client_notes: formData.get("notes"),
-    room_id: bookingData.roomId,
-    check_in: bookingData.startDay,
-    check_out: bookingData.endDay,
-    nights: Number(bookingData.nights),
-    guests_num: Number(bookingData.guests),
-    total_price: Math.ceil(
-      Number(bookingData.totalPrice) +
-        Number(bookingData.serviceFee) +
-        Number(bookingData.cleaningFee)
-    ),
-    user_id: formData.get("userId") ,
+    client_name: formData.get("fullName") as string,
+    client_email: formData.get("email") as string,
+    client_phone: Number(formData.get("number")) as number,
+    client_idNum: Number(formData.get("idNumber")) as number,
+    client_notes: formData.get("notes") as string,
+    room_id: formData.get("roomId") as string,
+    check_in: new Date(formData.get("startDay") as string),
+    check_out: new Date(formData.get("endDay") as string),
+    nights: Number(formData.get("nights")) as number,
+    guests_num: Number(formData.get("guests")) as number,
+    total_price: Number(formData.get("totalPrice")) as number,
+    user_id: formData.get("userId") as string,
   };
 
   const { data, error } = await supabase
     .from("reservations")
     .insert([newBooking])
     .select();
+
   if (error) {
     throw new Error(error.message);
   }
-  revalidatePath("/account/reservations")
-  redirect("/")
+
+  revalidatePath("/account/reservations");
+  redirect("/");
 }
 
+export async function addComment(previousState: any, formData: FormData) {
+  const comment = {
+    room_id: formData.get("roomId"),
+    comment: formData.get("comment"),
+    user_id : formData.get("userId"),
+  };
 
+  const { data, error } = await supabase
+    .from("comments")
+    .insert(comment)
+    .select();
 
-// export async function addComment(previousState: any, formData: FormData) {
-// const userId = formData.get("userId")
-//   let userName = "guest";
-//   if (userId) {
-//     userName = userData?.user_name || "guest";
-//   }
+  if (error) {
+    throw new Error("Failed to add comment: " + error.message);
+  }
 
-//   const comment = {
-//     room_id: formData.get("roomId"),
-//     comment: formData.get("comment"),
-//     user_name: userName
-//   };
-
-//   const { data, error } = await supabase
-//     .from("comments")
-//     .insert(comment)
-//     .select();
-
-//   if (error) {
-//     throw new Error("Failed to add comment: " + error.message);
-//   }
-
-//   revalidatePath(`/${comment.room_id}`);
-//   return data;
-// }
-
+  revalidatePath(`/${comment.room_id}`);
+  return data;
+}

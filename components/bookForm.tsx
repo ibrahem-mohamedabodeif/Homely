@@ -2,73 +2,62 @@
 
 import { createReservation } from "@/lib/actions";
 import { useUser } from "@clerk/nextjs";
+import { useSearchParams } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
 
-type searchType = {
-  searchParams: {
-    roomId: string;
-    startDay: string;
-    endDay: string;
-    nights: number;
-    guests: number;
-    totalPrice: number;
-    cleaningFee: number;
-    serviceFee: number;
-  };
-};
 
-export default function BookForm({ searchParams }: searchType) {
+export default function BookForm() {
     const {user} = useUser()
-  const {
-    roomId,
-    startDay,
-    endDay,
-    nights,
-    guests,
-    totalPrice,
-    cleaningFee,
-    serviceFee,
-  } = searchParams;
+    const [bookingData, setBookingData] = useState<any>({});
+    const searchParams = useSearchParams()
+ useEffect(() => {
+  if (searchParams) {
+    const params = Object.fromEntries(searchParams.entries());
+    setBookingData(params);
+  }
+}, [searchParams]);
 
-  const bookingData = {
-    roomId,
-    startDay,
-    endDay,
-    nights,
-    guests,
-    totalPrice,
-    cleaningFee,
-    serviceFee,
-  };
-
-  const createReservationWithData = createReservation.bind(null, bookingData);
+  
+  const totalPriceReservation = Math.ceil(Number(bookingData.totalPrice) + Number(bookingData.serviceFee) + Number(bookingData.cleaningFee));
+const[error, formAction] = useActionState(createReservation, null)
   return (
     <div className="flex justify-center lg:max-w-lg">
-      <div className="w-full">
-        <form action={createReservationWithData} className="flex flex-col">
-          <input type="hidden" name="userId" value={user?.id}/>
+      <div className="w-full ">
+        <form action={formAction} className="flex flex-col">
+        <input type="hidden" name="userId" value={user?.id || ""} />
+  <input type="hidden" name="roomId" value={bookingData.roomId || ""} />
+  <input type="hidden" name="startDay" value={bookingData.startDay || ""} />
+  <input type="hidden" name="endDay" value={bookingData.endDay || ""} />
+  <input type="hidden" name="nights" value={bookingData.nights || 0} />
+  <input type="hidden" name="guests" value={bookingData.guests || 0} />
+  <input type="hidden" name="totalPrice" value={totalPriceReservation || 0} />
           <input
             name="fullName"
             placeholder="Your Name"
             className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-4 w-full"
             type="text"
+            required
           />
           <input
             name="email"
             placeholder="Your Email"
             className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-4 w-full"
             type="email"
+            required
           />
           <input
             name="number"
             placeholder="Phone Number"
             className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-4 w-full"
             type="text"
+            required
           />
           <input
             name="idNumber"
             placeholder="Identity Number"
             className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-4 w-full"
             type="number"
+            required
           />
           <textarea
             name="notes"
