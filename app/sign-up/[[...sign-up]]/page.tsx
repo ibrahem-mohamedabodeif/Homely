@@ -3,11 +3,23 @@
 import * as Clerk from '@clerk/elements/common'
 import * as SignUp from '@clerk/elements/sign-up'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation';
 
 export default function SignUpPage() {
+    const searchParams = useSearchParams();
+  
+  const getRedirectUrl = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    const redirectUrl = params.get('redirect_url');
+    if (redirectUrl) {
+      return redirectUrl;
+    }
+    params.delete('redirect_url');
+  };
   return (
     <div className="grid w-full flex-grow items-center my-10 px-4 sm:justify-center">
-      <SignUp.Root>
+      <SignUp.Root path={getRedirectUrl()}>
         <SignUp.Step
           name="start"
           className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:w-96 sm:px-8"

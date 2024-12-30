@@ -3,6 +3,7 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
@@ -75,12 +76,12 @@ export default function SignInPage() {
           </SignIn.Action>
           <p className="text-center text-sm text-zinc-500">
             No account?{" "}
-            <Clerk.Link
-              navigate="sign-up"
+            <Link
+              href="/sign-up"
               className="font-medium text-zinc-950 decoration-zinc-950/20 underline-offset-4 outline-none hover:text-zinc-700 hover:underline focus-visible:underline"
             >
               Create an account
-            </Clerk.Link>
+            </Link>
           </p>
         </SignIn.Step>
       </SignIn.Root>
