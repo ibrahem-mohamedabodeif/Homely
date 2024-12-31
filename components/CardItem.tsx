@@ -24,7 +24,7 @@ export default function CardItem({ room }: any) {
         <h1 className="text-lg capitalize">
           {room.city}, {room.country}
         </h1>
-        <p className="text-gray-700 capitalize">{room.room_category} in {room.address}</p>
+        <p className="text-gray-700 capitalize">{room.address}</p>
       </div>
       <span className="text-gray-900 font-semibold ml-1">${room.room_price}</span>{" "}
       <span className="text-gray-600">/ Night</span>

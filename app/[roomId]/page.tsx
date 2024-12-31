@@ -18,7 +18,7 @@ export type Room = {
   city: string;
   room_price: number;
   guests_num: number;
-  description: string;
+  room_description: string;
   image1: string;
   image2: string;
   image3: string;
@@ -69,7 +69,7 @@ export default async function Page({ params, searchParams }: PageProps) {
               <HostedComp userId={room.user_id} />
             </Suspense>
             <Suspense fallback={<Loader />}>
-              <RoomDesc />
+              <RoomDesc room = {room}/>
             </Suspense>
             <Suspense fallback={<Loader />}>
               <SelectDates searchParams={searchParamsData} />

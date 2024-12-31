@@ -1,3 +1,4 @@
+import {type Room } from "@/app/[roomId]/page";
 import { CiWifiOn } from "react-icons/ci";
 import { GiAtSea } from "react-icons/gi";
 import { IoCarSportOutline } from "react-icons/io5";
@@ -6,17 +7,13 @@ import { MdOutlineBalcony } from "react-icons/md";
 import { PiTelevision } from "react-icons/pi";
 import { TbBeach, TbToolsKitchen3 } from "react-icons/tb";
 
-export default function RoomDesc() {
+export default function RoomDesc({room}: {room :Room}) {
   return (
     <>
       {/* Room description*/}
       <div className="mt-5 border-b-2 pb-5">
         <p className="text-lg font-light leading-relaxed">
-          Experience the extraordinary at our Glasshouse! With floor-to-ceiling
-          windows, this modern marvel offers breathtaking views, seamless
-          indoor-outdoor living, and a dedicated game area. Relax by the pool,
-          and retreat to stylish bedrooms with ensuite bathrooms. Book now for a
-          unique and unforgettable stay!
+          {room.room_description}
         </p>
       </div>
 

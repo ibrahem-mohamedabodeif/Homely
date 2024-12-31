@@ -55,7 +55,7 @@ export default async function RoomInfo({...props}:any) {
         <Suspense fallback={<Loader />}>
           <div className="mt-7 pb-5">
             <h1 className="text-xl font-medium mb-2 capitalize">
-              {room_category} in {city} , {address}
+              {address}
             </h1>
             <span className="font-light text-base">
               {guests_num} guests . {bedrooms_num} bedrooms . {beds_num} beds . {bathrooms_num}{" "}
