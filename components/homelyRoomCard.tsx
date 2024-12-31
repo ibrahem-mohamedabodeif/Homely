@@ -1,7 +1,6 @@
 "use client";
 
 import { deleteRoom } from "@/lib/functions";
-import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -9,16 +8,16 @@ import { IoMdTrash } from "react-icons/io";
 import { LuPenLine } from "react-icons/lu";
 export default function HomelyRoomCard({ room }: any) {
   const router = useRouter();
-  const user = useUser()
   const handleDelete = async (roomId: string) => {
-    if(user){
     try {
-      await deleteRoom(roomId);
-      toast.success("Successfully deleted");
+      const success = await deleteRoom(roomId);
+      if (success) {
+        toast.success("Successfully deleted");
+      } else {
+        toast.error("Failed to delete room");
+      }
     } catch (error) {
-      toast.error(`Failed to delete room`);
-    }} else {
-        toast.error("You need to be logged in");
+      toast.error("An unexpected error occurred");
     }
   };
 
@@ -39,12 +38,14 @@ export default function HomelyRoomCard({ room }: any) {
       </div>
       <div className="flex justify-between items-center">
         <div className="mt-2 flex flex-col gap-2">
-          <h1 className="text-lg capitalize">{room.room_name}</h1>
+          <h1 className="text-lg capitalize w-48 overflow-clip text-nowrap">{room.room_name}</h1>
           <h1 className="capitalize text-gray-700">
             {room.city}, {room.country}
           </h1>
           <div>
-            <span className="text-gray-900 font-semibold">${room.room_price}</span>{" "}
+            <span className="text-gray-900 font-semibold">
+              ${room.room_price}
+            </span>{" "}
             <span className="text-gray-600">/ night</span>
           </div>
         </div>

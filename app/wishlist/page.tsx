@@ -7,6 +7,7 @@ import { currentUser } from "@clerk/nextjs/server";
 export default async function Page() {
   
   const user = await currentUser();
+ 
 
   const wishRooms: any = await getWishRooms(user?.id);
 

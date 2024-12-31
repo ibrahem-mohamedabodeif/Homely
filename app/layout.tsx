@@ -19,13 +19,13 @@ export default async function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${inter.className}`}>
-          {children}
-          <Toaster />
-        <footer className="relative bottom-0 h-full ">
-        <Footer/>
-        </footer>
+      <html lang="en" className="h-full">
+        <body className={`${inter.className} flex flex-col min-h-screen`}>
+          <main className="flex-grow">
+            {children}
+            <Toaster />
+          </main>
+          <Footer />
         </body>
       </html>
     </ClerkProvider>
