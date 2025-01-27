@@ -52,10 +52,10 @@ export async function addRoom(
   const room: Record<string, any> = {
     user_id: user?.id,
     country: formData.get("country")?.toString().toLowerCase(),
-    city: formData.get("city"),
-    address: formData.get("address"),
+    city: formData.get("city")?.toString().toLowerCase(),
+    address: formData.get("address")?.toString().toLowerCase(),
     room_name: formData.get("roomName"),
-    room_category: formData.get("category"),
+    room_category: formData.get("category")?.toString().toLowerCase(),
     room_description: formData.get("description"),
     guests_num: formData.get("guests"),
     room_price: formData.get("price"),

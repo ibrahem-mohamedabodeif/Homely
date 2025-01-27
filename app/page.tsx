@@ -1,14 +1,14 @@
 import CardItem from "@/components/CardItem";
 import NavIcon from "@/components/navIcon";
-import { checkAvailability, getAllRooms } from "@/lib/functions";
+import { checkAvailability, getAllRooms, searchRooms } from "@/lib/functions";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "./loading";
 import HeroSec from "@/components/heroSec";
 type searchType = {
-  searchParams:Promise< {
+  searchParams: Promise<{
     type?: string;
-    country?: string;
+    destination?: string;
     guestsNum?: number;
     bedroomsNum?: number;
     price?: string;
@@ -20,65 +20,11 @@ type searchType = {
 
 export default async function Home({ searchParams }: searchType) {
   const rooms = await getAllRooms();
-  const {
-    type,
-    country,
-    guestsNum,
-    bedroomsNum,
-    bedsNum,
-    price,
-    checkIn,
-    checkOut,
-  } = await searchParams;
 
   let filteredRooms = rooms;
 
-  if (type) {
-    filteredRooms = filteredRooms.filter((room) => room.room_category === type);
-  }
-
-  if (country) {
-    filteredRooms = filteredRooms.filter((room) => room.country === country);
-  }
-
-  if (guestsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.guests_num === Number(guestsNum)
-    );
-  }
-
-  if (checkIn && checkOut) {
-    const promises = filteredRooms.map(async (room) => {
-      const isAvailable = await checkAvailability(room.id, checkIn, checkOut);
-      return isAvailable ? room : null;
-    });
-    filteredRooms = (await Promise.all(promises)).filter(Boolean);
-  }
-
-  if (bedroomsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.bedrooms_num === Number(bedroomsNum)
-    );
-  }
-  if (bedsNum) {
-    filteredRooms = filteredRooms.filter(
-      (room) => room.beds_num === Number(bedsNum)
-    );
-  }
-
-  if (price) {
-    if (price === "<200")
-      filteredRooms = filteredRooms.filter((room) => room.room_price <= 200);
-    else if (price === "<500")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.room_price > 200 && room.room_price <= 500
-      );
-    else if (price === "<1000")
-      filteredRooms = filteredRooms.filter(
-        (room) => room.room_price > 500 && room.room_price <= 1000
-      );
-    else if (price === ">1000")
-      filteredRooms = filteredRooms.filter((room) => room.room_price >= 1000);
+  if (searchParams) {
+    filteredRooms = await searchRooms(searchParams);
   }
 
   return (
