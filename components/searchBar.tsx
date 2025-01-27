@@ -14,7 +14,7 @@ export default function SearchBar() {
   const [guests, setGuests] = useState<string>("");
   const [countries, setCountries] = useState<string[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<string[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     async function fetchCountries() {
