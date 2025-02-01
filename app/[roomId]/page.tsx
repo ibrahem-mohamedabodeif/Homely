@@ -2,6 +2,7 @@ import CheckForm from "@/components/CheckForm";
 import { getAllRooms, getRoomById} from "@/lib/functions";
 import PlaceRule from "@/components/placeRule";
 import { Suspense } from "react";
+
 import Loader from "../loading";
 import NavBar from "@/components/navbar";
 import RoomInfo from "@/components/roomInfo";
