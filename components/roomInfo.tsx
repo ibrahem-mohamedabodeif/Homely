@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import ImageComponent from "./imageComponent";
 import Loader from "@/app/loading";
 import ShareBtn from "./shareBtn";
+import BackBtn from "./backBtn";
 
 export default async function RoomInfo({ ...props }: any) {
   const {
@@ -11,11 +12,7 @@ export default async function RoomInfo({ ...props }: any) {
     country,
     city,
     guests_num,
-    image1,
-    image2,
-    image3,
-    image4,
-    image5,
+    room_images,
     bathrooms_num,
     beds_num,
     bedrooms_num,
@@ -27,9 +24,12 @@ export default async function RoomInfo({ ...props }: any) {
   return (
     <>
       <div className="flex justify-between mb-10 w-full">
+        <div className="flex items-center gap-2">
+        <BackBtn/>
         <h1 className="text-xl md:text-2xl font-medium capitalize">
           {room_name},{country}
         </h1>
+        </div>
         <div className="flex gap-5 items-center">
           
           <div className="flex items-center gap-1 ">
@@ -51,11 +51,8 @@ export default async function RoomInfo({ ...props }: any) {
       </div>
       <Suspense fallback={<Loader />}>
         <ImageComponent
-          image1={image1}
-          image2={image2}
-          image3={image3}
-          image4={image4}
-          image5={image5}
+          images={room_images}
+          roomId={roomId}
         />
       </Suspense>
       <Suspense fallback={<Loader />}>

@@ -1,6 +1,7 @@
 "use client";
 import { deleteWishRoom } from "@/lib/functions";
 import Image from "next/image";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { MdDeleteOutline } from "react-icons/md";
 
@@ -15,6 +16,7 @@ export default function WishListCard({ room }: any) {
   };
   return (
     <div className="flex flex-col">
+      <Link href={`/${room.id}`}>
       <div className="relative w-72 h-44 rounded-xl overflow-hidden">
       <button onClick={() => handleDelete(room.id)} className=" absolute right-1 top-1 text-white rounded-full p-1.5 bg-gray-900">
       <MdDeleteOutline
@@ -22,7 +24,7 @@ export default function WishListCard({ room }: any) {
           />
 </button>
         <Image
-          src={room.rooms.image1}
+          src={room.rooms.room_images[0]}
           alt={room.rooms.room_name}
           width={500}
           height={700}
@@ -35,6 +37,7 @@ export default function WishListCard({ room }: any) {
         </h1>
         <p className="text-gray-700">{room.rooms.address || "No Address"}</p>
       </div>
+      </Link>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export default function ReservationCard({ room }: any) {
             <div className="flex flex-col gap-2 items-center md:flex-row">
               <div className="relative w-60 md:w-40 h-40 md:h-28 rounded-3xl overflow-hidden">
                 <Image
-                  src={room.rooms.image1}
+                  src={room.rooms.room_images[0]}
                   alt={room.rooms.room_name}
                   width={500}
                   height={500}
@@ -74,7 +74,7 @@ export default function ReservationCard({ room }: any) {
             <div className="flex flex-col gap-2 items-center md:flex-row">
             <div className="relative w-60 md:w-40 h-40 md:h-28 rounded-3xl overflow-hidden">
             <Image
-                  src={room.rooms.image1}
+                  src={room.rooms.room_images[0]}
                   alt={room.rooms.room_name}
                   width={500}
                   height={500}

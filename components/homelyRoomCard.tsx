@@ -1,6 +1,7 @@
 "use client";
 
 import { deleteRoom } from "@/lib/functions";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -10,12 +11,9 @@ export default function HomelyRoomCard({ room }: any) {
   const router = useRouter();
   const handleDelete = async (roomId: string) => {
     try {
-      const success = await deleteRoom(roomId);
-      if (success) {
+       await deleteRoom(roomId);
         toast.success("Successfully deleted");
-      } else {
-        toast.error("Failed to delete room");
-      }
+        revalidatePath("/account/homely-rooms");
     } catch (error) {
       toast.error("An unexpected error occurred");
     }
@@ -29,7 +27,7 @@ export default function HomelyRoomCard({ room }: any) {
     <div className="w-72 md:w-60 max-sm:mx-auto">
       <div className="w-72 md:w-60 h-60 rounded-xl overflow-hidden">
         <Image
-          src={room.image1}
+          src={room.room_images[0]}
           alt={room.room_name}
           width={500}
           height={700}

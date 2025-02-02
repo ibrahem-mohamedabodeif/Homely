@@ -2,7 +2,7 @@ import Image from "next/image";
 
 type pageProp = {
   room: {
-    image1: string;
+    room_images: string[];
   
     room_price: number;
   
@@ -33,7 +33,7 @@ export default async function BookCard({ room, searchParams }: pageProp) {
       <div className="flex gap-4 mb-5">
         <div className="relative w-48 h-32 overflow-hidden">
         <Image
-          src={room.image1}
+          src={room.room_images[0]}
           alt={room.room_name}
           width={500}
           height={700}

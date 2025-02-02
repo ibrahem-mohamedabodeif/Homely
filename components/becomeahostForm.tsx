@@ -3,10 +3,14 @@ import { addRoom, updateRoom } from "@/lib/actions";
 import Image from "next/image";
 import { useActionState } from "react";
 import { useState } from "react";
+import { CiCamera } from "react-icons/ci";
 
 export default function BecomeahostForm({ room }: { room?: any }) {
   const [error, formAction] = useActionState(
     async (previousState: any, formData: FormData) => {
+      if (imagePreviews.length < 5) {
+        return { message: "Please upload at least 5 photos." };
+      }
       try {
         if (room) {
           await updateRoom(previousState, formData);
@@ -22,30 +26,29 @@ export default function BecomeahostForm({ room }: { room?: any }) {
     null
   );
 
-  const [imagePreviews, setImagePreviews] = useState<string[]>(() => {
-    if (room) {
-      return [
-        room.image1 || "",
-        room.image2 || "",
-        room.image3 || "",
-        room.image4 || "",
-        room.image5 || "",
-      ];
-    }
-    return [];
-  });
+  const [imagePreviews, setImagePreviews] = useState<string[]>(
+    room?.room_images || []
+  );
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const newImagePreviews = [...imagePreviews];
-        newImagePreviews[index] = event.target?.result as string;
-        setImagePreviews(newImagePreviews);
-      };
-      reader.readAsDataURL(files[0]);
+    if (files) {
+      const newImagePreviews = [...imagePreviews];
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          newImagePreviews.push(event.target?.result as string);
+          setImagePreviews([...newImagePreviews]);
+        };
+        reader.readAsDataURL(files[i]);
+      }
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const newImagePreviews = [...imagePreviews];
+    newImagePreviews.splice(index, 1);
+    setImagePreviews(newImagePreviews);
   };
 
   return (
@@ -192,38 +195,56 @@ export default function BecomeahostForm({ room }: { room?: any }) {
           <div>
             {/* Room Photos */}
             <div>
-              <h1 className="text-xl pb-5"> Your place photos</h1>
-              <div className="border p-4 border-gray-400 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-5">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className={`relative ${index === 0 ? "col-span-1 md:col-span-2 h-60" : "col-span-1"}`}
-                  >
-                    <input
-                      name={`image${index + 1}`}
-                      type="file"
-                      placeholder={`image ${index + 1}`}
-                      className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                      onChange={(e) => handleImageChange(e, index)}
-                    />
-                    {imagePreviews[index] ? (
-                      <div className={ `relative ${index===0 ? "h-60 w-full overflow-hidden" : "w-full h-36 overflow-hidden"} `} >
+              <h1 className="text-xl pb-5">Your place photos</h1>
+              <div className="max-h-[500px] overflow-y-auto border p-4 border-gray-400 rounded-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Image Previews */}
+                  {imagePreviews.map((image, index) => (
+                    <div
+                      key={index}
+                      className={`relative ${
+                        index === 0
+                          ? "col-span-1 md:col-span-2 h-60"
+                          : "col-span-1 h-36"
+                      }`}
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-lg">
                         <Image
-                          src={imagePreviews[index]}
+                          src={image}
                           alt={`Preview ${index + 1}`}
                           fill
-                          className="h-full object-cover rounded-2xl"
+                          className="object-cover"
                         />
                       </div>
-                    ) : (
-                    
-                      <div className={`${index===0 ? "h-60 w-full flex items-center justify-center border border-gray-400 rounded-2xl" : "w-full h-36 flex items-center justify-center border border-gray-400 rounded-2xl"} `} >
-                        <span className="text-gray-400">Upload Image {index + 1}</span>
-                      </div>
-                     
-                    )}
-                  </div>
-                ))}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute top-2 right-3 font-extrabold bg-white w-7 h-7 rounded-full"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Upload Button */}
+                  <label
+                    className={`relative h-40 w-full flex items-center flex-col gap-3 justify-center border border-gray-400 rounded-lg cursor-pointer ${
+                      imagePreviews.length === 0 ? "col-span-2" : "col-span-1"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      name="room_images"
+                      className="absolute inset-0 opacity-0 w-full h-full cursor-pointer "
+                      onChange={handleImageChange}
+                      multiple
+                    />
+                    <CiCamera size={40} color="#9ca3af" />
+                    <span className="text-gray-400 text-lg">
+                      Add at least 5 photos
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
             {/* Room Pricing */}
@@ -241,6 +262,9 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                 <span className="text-xl font-light capitalize">/night</span>
               </div>
             </div>
+        {error && (
+          <div className="text-red-500 text-xl mt-10">{error.message}</div>
+        )}
           </div>
         </div>
         <button

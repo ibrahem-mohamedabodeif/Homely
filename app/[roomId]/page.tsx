@@ -20,11 +20,7 @@ export type Room = {
   room_price: number;
   guests_num: number;
   room_description: string;
-  image1: string;
-  image2: string;
-  image3: string;
-  image4: string;
-  image5: string;
+  room_images: string[];
   user_id: string;
   bathrooms_num: number;
   beds_num: number;
@@ -59,8 +55,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   return (
     <>
-      <NavBar />
-      <div className="md:mx-20 mx-5 mb-16">
+      <div className="mb-16">
         <Suspense fallback={<Loader />}>
           <RoomInfo room={room} roomId={roomId} />
         </Suspense>

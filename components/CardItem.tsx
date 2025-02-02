@@ -13,7 +13,7 @@ export default function CardItem({ room }: any) {
           />
         </SaveButton>
         <Image
-          src={room.image1}
+          src={room.room_images[0]}
           alt={room.room_name}
           width={500}
           height={700}
