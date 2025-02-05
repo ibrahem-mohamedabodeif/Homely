@@ -54,7 +54,7 @@ type searchType = {
           <BackBtn />
           <h1 className="text-2xl tracking-wide font-semibold">Request to book</h1>
         </div>
-        <div className="mx-10 grid grid-cols-1 md:grid-cols-2 justify-center mt-10 ">
+        <div className="mx-10 grid grid-cols-1 space-y-reverse gap-10 md:grid-cols-2 justify-center mt-10 ">
           <Suspense fallback={<Loader />}>
             <div>
               <div className="lg:max-w-lg">

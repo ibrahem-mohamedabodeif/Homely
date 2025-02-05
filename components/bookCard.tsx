@@ -30,7 +30,7 @@ export default async function BookCard({ room, searchParams }: pageProp) {
 
   return (
     <div className="max-w-full md:max-w-2xl border border-[#6e6e6e] p-6 rounded-3xl bg-white">
-      <div className="flex gap-4 mb-5">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-5">
         <div className="relative w-48 h-32 overflow-hidden">
         <Image
           src={room.room_images[0]}

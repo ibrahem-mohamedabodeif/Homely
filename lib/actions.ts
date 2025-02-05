@@ -4,6 +4,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { redirect } from "next/navigation";
+import { BookingDataType, bookingSchema } from "./schema";
 
 export async function updateUserInfo(previousState: any, formData: FormData) {
   const user = await currentUser();
@@ -171,35 +172,41 @@ export async function updateRoom(previousState: any, formData: FormData) {
 }
 
 export async function createReservation(
-  previousState: any,
-  formData: FormData
+  newReservation: BookingDataType,
 ) {
-  const newBooking = {
-    client_name: formData.get("fullName") as string,
-    client_email: formData.get("email") as string,
-    client_phone: Number(formData.get("number")) as number,
-    client_idNum: Number(formData.get("idNumber")) as number,
-    client_notes: formData.get("notes") as string,
-    room_id: formData.get("roomId") as string,
-    check_in: new Date(formData.get("startDay") as string),
-    check_out: new Date(formData.get("endDay") as string),
-    nights: Number(formData.get("nights")) as number,
-    guests_num: Number(formData.get("guests")) as number,
-    total_price: Number(formData.get("totalPrice")) as number,
-    user_id: formData.get("userId") as string,
-  };
+ 
+  const result = bookingSchema.safeParse(newReservation);
+  if (!result.success) {
+    const errorMap: Record<string, string> = {};
+    result.error.errors.map((error) => {
+      errorMap[error.path[0]] = error.message;
+    });
+    return {
+      success: false,
+      errors: errorMap,
+      inputs: newReservation,
+      message:"please entered a valid booking data"
+    }
+  }
 
   const { data, error } = await supabase
     .from("reservations")
-    .insert([newBooking])
+    .insert({...result.data,check_in:new Date(result.data.check_in),check_out:new Date(result.data.check_out)})
     .select();
+    revalidatePath("/account/reservations");
 
   if (error) {
-    throw new Error(error.message);
-  }
+    return {
+      success: false,
+      inputs: newReservation,
+      message:"Something went wrong, please try again later"
+    }  }
+    return {
+      success: true,
+      message: "Reservation created successfully",
+      inputs: newReservation,
+    }
 
-  revalidatePath("/account/reservations");
-  redirect("/");
 }
 
 export async function addComment(previousState: any, formData: FormData) {
