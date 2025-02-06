@@ -16,3 +16,43 @@ export const bookingSchema = z.object({
 });
 
 export type BookingDataType = z.infer<typeof bookingSchema>;
+
+const fileSchema = z.custom<File>((f) => f instanceof File,{
+    message: "expected an image"
+  });
+export const addedRoomSchema = z.object({
+  user_id: z.string(),
+  room_name: z.string().min(1, {message : "please enter place name"}),
+  country: z.string().min(1, {message : "please enter valid country name"}),
+  city: z.string().min(1, {message : "please enter valid city name"}),
+  address: z.string().min(1, {message : "please enter valid address"}),
+  room_description: z.string().min(50, {message : "please describe you place"}),
+  room_category: z.string().min(1, {message : "please choose your place category"}),
+  guests_num: z.number( {message : "please enter capacity place number"}).min(1,{message : "please enter valid number"}),
+  bedrooms_num: z.number( {message : "please enter number of bedrooms"}).min(1,{message : "please enter valid number"}),
+  beds_num: z.number( {message : "please enter number of beds"}).min(1,{message : "please enter valid number"}),
+  bathrooms_num: z.number( {message : "please enter number of bathrooms"}).min(1,{message : "please enter valid number"}),
+  room_price: z.number({message : "please enter price for your place"}).min(10,{message : "please enter valid price"}),
+  room_images: z.array(fileSchema).min(5, {message : "please enter at least 5 images for your place"}),
+});
+
+export type addedRoomType = z.infer<typeof addedRoomSchema>;
+
+export const updatedRoomSchema = z.object({
+  user_id: z.string(),
+  id: z.number(),
+  room_name: z.string().min(1, {message : "please enter place name"}),
+  country: z.string().min(1, {message : "please enter valid country name"}),
+  city: z.string().min(1, {message : "please enter valid city name"}),
+  address: z.string().min(1, {message : "please enter valid address"}),
+  room_description: z.string().min(50, {message : "please describe you place"}),
+  room_category: z.string().min(1, {message : "please choose your place category"}),
+  guests_num: z.number( {message : "please enter capacity place number"}).min(1,{message : "please enter valid number"}),
+  bedrooms_num: z.number( {message : "please enter number of bedrooms"}).min(1,{message : "please enter valid number"}),
+  beds_num: z.number( {message : "please enter number of beds"}).min(1,{message : "please enter valid number"}),
+  bathrooms_num: z.number( {message : "please enter number of bathrooms"}).min(1,{message : "please enter valid number"}),
+  room_price: z.number({message : "please enter price for your place"}).min(10,{message : "please enter valid price"}),
+  room_images: z.array(fileSchema).optional(),
+});
+
+export type updatedRoomType = z.infer<typeof updatedRoomSchema>;

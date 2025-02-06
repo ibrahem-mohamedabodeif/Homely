@@ -4,7 +4,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { redirect } from "next/navigation";
-import { BookingDataType, bookingSchema } from "./schema";
+import { addedRoomSchema, addedRoomType, BookingDataType, bookingSchema, updatedRoomSchema, updatedRoomType } from "./schema";
 
 export async function updateUserInfo(previousState: any, formData: FormData) {
   const user = await currentUser();
@@ -44,61 +44,221 @@ export async function updateUserInfo(previousState: any, formData: FormData) {
   revalidatePath("/account");
   return updatedUser;
 }
-export async function addRoom(previousState: any, formData: FormData) {
-  const user = await currentUser();
-  const roomImages = formData.getAll("room_images");
-  const roomData = {
-    user_id: user?.id,
-    room_name: formData.get("roomName"),
-    country: formData.get("country"),
-    city: formData.get("city"),
-    address: formData.get("address"),
-    room_description: formData.get("description"),
-    room_category: formData.get("category"),
-    guests_num: formData.get("guests"),
-    bedrooms_num: formData.get("noBedroom"),
-    beds_num: formData.get("noBed"),
-    bathrooms_num: formData.get("noBath"),
-    room_price: formData.get("price"),
-    room_images: roomImages,
-  };
+// export async function addRoom(previousState: any, formData: FormData) {
+//   const user = await currentUser();
+//   const roomImages = formData.getAll("room_images");
+//   const roomData = {
+//     user_id: user?.id,
+//     room_name: formData.get("roomName"),
+//     country: formData.get("country"),
+//     city: formData.get("city"),
+//     address: formData.get("address"),
+//     room_description: formData.get("description"),
+//     room_category: formData.get("category"),
+//     guests_num: formData.get("guests"),
+//     bedrooms_num: formData.get("noBedroom"),
+//     beds_num: formData.get("noBed"),
+//     bathrooms_num: formData.get("noBath"),
+//     room_price: formData.get("price"),
+//     room_images: roomImages,
+//   };
 
-  // Upload images to Supabase Storage and get URLs
-  const imageUrls = await Promise.all(
-    roomImages.map(async (image) => {
-      const imageName = `${Math.random()}-${(image as File).name}`.replaceAll(
-        "/",
-        ""
-      );
-      const { data, error } = await supabase.storage
-        .from("images")
-        .upload(imageName, image);
-      if (error) throw error;
+//   // Upload images to Supabase Storage and get URLs
+//   const imageUrls = await Promise.all(
+//     roomImages.map(async (image) => {
+//       const imageName = `${Math.random()}-${(image as File).name}`.replaceAll(
+//         "/",
+//         ""
+//       );
+//       const { data, error } = await supabase.storage
+//         .from("images")
+//         .upload(imageName, image);
+//       if (error) throw error;
 
-      const { data: signedUrlData, error: urlError } = await supabase.storage
-        .from("images")
-        .createSignedUrl(imageName, 60 * 60 * 24 * 365);
-      if (urlError) throw urlError;
-      return signedUrlData.signedUrl;
-    })
-  );
+//       const { data: signedUrlData, error: urlError } = await supabase.storage
+//         .from("images")
+//         .createSignedUrl(imageName, 60 * 60 * 24 * 365);
+//       if (urlError) throw urlError;
+//       return signedUrlData.signedUrl;
+//     })
+//   );
 
-  // Save room data with image URLs
-  const { data, error } = await supabase
-    .from("rooms")
-    .insert([{ ...roomData, room_images: imageUrls }])
-    .select();
+//   // Save room data with image URLs
+//   const { data, error } = await supabase
+//     .from("rooms")
+//     .insert([{ ...roomData, room_images: imageUrls }])
+//     .select();
 
-  if (error) throw error;
-  revalidatePath("/", "layout");
-  revalidatePath("/account/homley-rooms");
-  redirect("/account/homely-rooms");
+//   if (error) throw error;
+//   revalidatePath("/", "layout");
+//   revalidatePath("/account/homley-rooms");
+//   redirect("/account/homely-rooms");
+// }
+// export async function updateRoom(previousState: any, formData: FormData) {
+//   const user = await currentUser();
+
+//   const roomId = formData.get("roomId");
+
+//   // Fetch Existing Room Data
+//   const { data: existingRoom, error: fetchError } = await supabase
+//     .from("rooms")
+//     .select("*")
+//     .eq("id", roomId)
+//     .single();
+
+//   if (fetchError) throw new Error("Room not found");
+
+//   // Process Form Data
+//   const newImages = formData.getAll("room_images") as File[];
+//   const existingImages = existingRoom.room_images || [];
+
+//   const roomUpdates = {
+//     room_name: formData.get("roomName"),
+//     country: formData.get("country"),
+//     city: formData.get("city"),
+//     address: formData.get("address"),
+//     room_description: formData.get("description"),
+//     room_category: formData.get("category"),
+//     guests_num: Number(formData.get("guests")),
+//     bedrooms_num: Number(formData.get("noBedroom")),
+//     beds_num: Number(formData.get("noBed")),
+//     bathrooms_num: Number(formData.get("noBath")),
+//     room_price: Number(formData.get("price")),
+//     room_images: existingImages,
+//   };
+
+//   // Upload New Images
+//   const uploadedUrls = await Promise.all(
+//     newImages.map(async (image) => {
+//       if (image && image.size > 0) {
+//         const imageName = `${Math.random()}-${(image as File).name}`.replaceAll(
+//           "/",
+//           ""
+//         );
+//         const { error: uploadError } = await supabase.storage
+//           .from("images")
+//           .upload(imageName, image);
+
+//         if (uploadError) throw uploadError;
+
+//         const { data: signedUrlData, error: urlError } = await supabase.storage
+//           .from("images")
+//           .createSignedUrl(imageName, 60 * 60 * 24 * 365);
+//         if (urlError) throw urlError;
+//         return signedUrlData.signedUrl;
+//       }
+//       return null;
+//     })
+//   );
+
+//   roomUpdates.room_images = [
+//     ...existingImages,
+//     ...uploadedUrls.filter((url) => url !== null),
+//   ];
+
+//   // Update Database Record
+//   const { error: updateError } = await supabase
+//     .from("rooms")
+//     .update(roomUpdates)
+//     .eq("id", roomId);
+
+//   if (updateError) throw updateError;
+
+//   // Revalidate and Redirect
+//   revalidatePath("/", "layout");
+//   revalidatePath("/account/homely-rooms");
+//   redirect("/account/homely-rooms");
+// }
+
+export async function addRoom(room: addedRoomType) {
+  const result = addedRoomSchema.safeParse(room);
+  if (!result.success) {
+    const errorMap: Record<string, string> = {};
+    result.error.errors.map((error) => {
+      errorMap[error.path[0]] = error.message;
+    });
+    return {
+      success: false,
+      errors: errorMap,
+      inputs: room,
+      message: "please entered a valid place data",
+    };
+  }
+  try {
+    const user = await currentUser();
+    const roomImages = result.data.room_images;
+    const roomData = {
+      ...result.data,
+      user_id: user?.id,
+      room_images: roomImages,
+    };
+
+    // Upload images to Supabase Storage and get URLs
+    const imageUrls = await Promise.all(
+      roomImages.map(async (image) => {
+        const imageName = `${Math.random()}-${
+          (image as unknown as File).name
+        }`.replaceAll("/", "");
+        const { data, error } = await supabase.storage
+          .from("images")
+          .upload(imageName, image);
+        if (error) throw error;
+
+        const { data: signedUrlData, error: urlError } = await supabase.storage
+          .from("images")
+          .createSignedUrl(imageName, 60 * 60 * 24 * 365);
+        if (urlError) throw urlError;
+        return signedUrlData.signedUrl;
+      })
+    );
+
+    // Save room data with image URLs
+    const { data, error } = await supabase
+      .from("rooms")
+      .insert([{ ...roomData, room_images: imageUrls }])
+      .select();
+
+    revalidatePath("/", "layout");
+    revalidatePath("/account/homley-rooms");
+    if (error) {
+      return {
+        success: false,
+        inputs: room,
+        message: "Something went wrong, please try again later",
+      };
+    }
+    return {
+      success: true,
+      message: "your place added successfully",
+      inputs: room,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error,
+    };
+  }
+
+  // redirect("/account/homely-rooms");
 }
 
-export async function updateRoom(previousState: any, formData: FormData) {
-  const user = await currentUser();
+export async function updateRoom(room: updatedRoomType) {
+  const result = updatedRoomSchema.safeParse(room);
+  if (!result.success) {
+    const errorMap: Record<string, string> = {};
+    result.error.errors.map((error) => {
+      errorMap[error.path[0]] = error.message;
+    });
+    return {
+      success: false,
+      errors: errorMap,
+      inputs: room,
+      message: "please entered a valid place data",
+    };
+  }
 
-  const roomId = formData.get("roomId");
+  try {
+    const roomId = result.data.id;
 
   // Fetch Existing Room Data
   const { data: existingRoom, error: fetchError } = await supabase
@@ -110,21 +270,11 @@ export async function updateRoom(previousState: any, formData: FormData) {
   if (fetchError) throw new Error("Room not found");
 
   // Process Form Data
-  const newImages = formData.getAll("room_images") as File[];
+  const newImages = result.data.room_images as unknown as File[];
   const existingImages = existingRoom.room_images || [];
 
   const roomUpdates = {
-    room_name: formData.get("roomName"),
-    country: formData.get("country"),
-    city: formData.get("city"),
-    address: formData.get("address"),
-    room_description: formData.get("description"),
-    room_category: formData.get("category"),
-    guests_num: Number(formData.get("guests")),
-    bedrooms_num: Number(formData.get("noBedroom")),
-    beds_num: Number(formData.get("noBed")),
-    bathrooms_num: Number(formData.get("noBath")),
-    room_price: Number(formData.get("price")),
+    ...result.data,
     room_images: existingImages,
   };
 
@@ -165,10 +315,24 @@ export async function updateRoom(previousState: any, formData: FormData) {
 
   if (updateError) throw updateError;
 
-  // Revalidate and Redirect
   revalidatePath("/", "layout");
   revalidatePath("/account/homely-rooms");
-  redirect("/account/homely-rooms");
+  return {
+    success: true,
+    message: "your place updated successfully",
+    inputs: roomUpdates,
+  };
+} catch (error) {
+  return {
+    success: false,
+    message: error,
+    inputs: room,
+  };
+}
+
+  // Revalidate and Redirect
+ 
+  // redirect("/account/homely-rooms");
 }
 
 export async function createReservation(

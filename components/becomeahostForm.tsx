@@ -1,29 +1,79 @@
 "use client";
 import { addRoom, updateRoom } from "@/lib/actions";
+import { addedRoomSchema, updatedRoomSchema } from "@/lib/schema";
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useActionState } from "react";
 import { useState } from "react";
 import { CiCamera } from "react-icons/ci";
 
 export default function BecomeahostForm({ room }: { room?: any }) {
-  const [error, formAction] = useActionState(
-    async (previousState: any, formData: FormData) => {
-      if (imagePreviews.length < 5) {
-        return { message: "Please upload at least 5 photos." };
+  const { user } = useUser();
+  const initialState = {
+    success : false,
+    errors :{},
+    message:"",
+    inputs:{}
+  }
+  const [state, formAction] = useActionState(
+    async (previousState: any, formData: FormData): Promise<any> => {
+      const formValues = {
+        user_id: formData.get("userId") as string,
+        room_name: formData.get("room_name") as string,
+        country: formData.get("country") as string,
+        city: formData.get("city") as string,
+        address: formData.get("address") as string,
+        room_description: formData.get("room_description") as string,
+        room_category: formData.get("room_category") as string,
+        guests_num: Number(formData.get("guests_num")) as number,
+        bedrooms_num: Number(formData.get("bedrooms_num")) as number,
+        beds_num: Number(formData.get("beds_num")) as number,
+        bathrooms_num: Number(formData.get("bathrooms_num")) as number,
+        room_price: Number(formData.get("room_price")) as number,
+         room_images: (formData.getAll("room_images") as File[]) ,
       }
-      try {
-        if (room) {
-          await updateRoom(previousState, formData);
-        } else {
-          await addRoom(previousState, formData);
-        }
-      } catch {
+
+      const result = room
+      ? updatedRoomSchema.safeParse({ ...formValues, id: room.id })
+      : addedRoomSchema.safeParse(formValues);
+
+    if (!result.success) {
+      const errorMap: Record<string, string> = {};
+      result.error.errors.forEach((error) => {
+        errorMap[error.path[0]] = error.message;
+      });
+      return {
+        success: false,
+        errors: errorMap,
+        inputs: formValues,
+        message: "Please enter valid place data.",
+      };
+    }
+
+    try {
+      const response = room
+        ? await updateRoom({ ...result.data, id: room.id })
+        : await addRoom({ ...result.data, room_images: result.data.room_images || [] });
+
+      if (response && !response.success) {
         return {
-          message: room ? "Failed to update room" : "Failed to add room",
+          success: false,
+          errors: response.errors,
+          inputs: formValues,
+          message: response.message,
         };
       }
-    },
-    null
+      return response;
+    } catch (error) {
+      return {
+        success: false,
+        message: room ? "Failed to update room." : "Failed to add room.",
+        errors: {},
+        inputs: formValues,
+      };
+    }
+  },
+  initialState
   );
 
   const [imagePreviews, setImagePreviews] = useState<string[]>(
@@ -33,15 +83,9 @@ export default function BecomeahostForm({ room }: { room?: any }) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const newImagePreviews = [...imagePreviews];
-      for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          newImagePreviews.push(event.target?.result as string);
-          setImagePreviews([...newImagePreviews]);
-        };
-        reader.readAsDataURL(files[i]);
-      }
+      const fileArray = Array.from(files);
+      const newImagePreviews = fileArray.map((file) => URL.createObjectURL(file)); 
+      setImagePreviews((prev) => [...prev, ...newImagePreviews]); 
     }
   };
 
@@ -53,8 +97,14 @@ export default function BecomeahostForm({ room }: { room?: any }) {
 
   return (
     <div className="mx-4 md:mx-10">
+        {state?.message && (
+        <div className={`my-10 -mt-5 text-xl ${state.success ? "text-green-500" : "text-red-500"}`}>
+          {state.message}
+        </div>
+      )}
       <form action={formAction}>
-        {room ? <input type="hidden" name="roomId" value={room?.id} /> : null}
+      {room && <input type="hidden" name="roomId" value={room.id} />}
+      <input type="hidden" name="userId" value={user?.id ||""} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Room Details */}
           <div className="">
@@ -64,13 +114,13 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                 <div className="flex flex-col">
                   <label className="font-light pl-2"> Place title </label>
                   <input
+                    name="room_name"
                     type="text"
-                    name="roomName"
-                    defaultValue={room?.room_name}
-                    placeholder="Title"
-                    required
+                    defaultValue={room ? room.room_name : state.inputs.room_name}
+                    placeholder="Place title"
                     className="border outline-none rounded-2xl p-2 mt-2"
                   />
+                  {state?.errors?.room_name && <p className="text-red-500 mb-2 capitalize">{state.errors.room_name}</p>}
                 </div>
                 <div className="flex flex-col">
                   <label className="font-light pl-2"> Place location </label>
@@ -79,36 +129,37 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       <input
                         name="country"
                         placeholder="Country"
-                        defaultValue={room?.country}
-                        required
+                        defaultValue={room ? room.country : state.inputs.country}
                         className="outline-none md:border-r md:mr-3 md:pr-20 mb-2 md:w-1/2"
                       />
+                    {state?.errors?.country && <p className="text-red-500 mb-2 capitalize">{state.errors.country}</p>}
+
                       <input
                         name="city"
-                        defaultValue={room?.city}
+                        defaultValue={room ? room.city : state.inputs.city}
                         placeholder="City"
-                        required
                         className="outline-none md:w-1/2 mb-2"
                       />
+                  {state?.errors?.city && <p className="text-red-500 mb-2 capitalize">{state.errors.city}</p>}
                     </div>
                     <input
                       name="address"
-                      defaultValue={room?.address}
+                      defaultValue={room ? room.address : state.inputs.address}
                       placeholder="Address"
-                      required
                       className="border outline-none rounded-2xl p-2 mt-2 col-span-1 md:col-span-2"
                     />
+                    {state?.errors?.address && <p className="text-red-500 mb-2 capitalize">{state.errors.address}</p>}
                   </div>
                 </div>
                 <div className="flex flex-col">
                   <label className="font-light pl-2">Describe your place</label>
                   <textarea
-                    name="description"
-                    defaultValue={room?.room_description}
-                    required
+                    name="room_description"
+                    defaultValue={room ? room.room_description : state.inputs.room_description}
                     placeholder="Describe your place to help clients know where they will be"
                     className="border outline-none rounded-2xl p-2 mt-2 resize-none h-40"
                   />
+                  {state?.errors?.room_description && <p className="text-red-500 mb-2 capitalize">{state.errors.room_description}</p>}
                 </div>
               </div>
               {/* category , Numbers*/}
@@ -116,9 +167,8 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                 <div className="flex flex-col">
                   <label className="font-light pl-2"> Category</label>
                   <select
-                    name="category"
-                    defaultValue={room?.room_category}
-                    required
+                    name="room_category"
+                    defaultValue={room ? room.room_category : state.inputs.room_category}
                     className="border outline-none rounded-2xl p-2 mt-2 font-light capitalize"
                   >
                     <option value="room" key="room">
@@ -143,49 +193,54 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       luxe
                     </option>
                   </select>
+                  {state?.errors?.room_category && <p className="text-red-500 mb-2 capitalize">{state.errors.room_category}</p>}
                 </div>
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Guests Num.</label>
                     <input
-                      name="guests"
+                      name="guests_num"
+                      type="number"
                       placeholder="Number of Guests"
-                      defaultValue={room?.guests_num}
-                      required
+                      defaultValue={room ? room.guests_num : state.inputs.guests_num}
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
+                    {state?.errors?.guests_num && <p className="text-red-500 mb-2 capitalize">{state.errors.guests_num}</p>}
                   </div>
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Bedrooms Num.</label>
                     <input
-                      name="noBedroom"
+                      name="bedrooms_num"
+                      type="number"
                       placeholder="Number of Bedrooms"
-                      defaultValue={room?.bedrooms_num}
-                      required
+                      defaultValue={room ? room.bedrooms_num : state.inputs.bedrooms_num}
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
+                    {state?.errors?.bedrooms_num && <p className="text-red-500 mb-2 capitalize">{state.errors.bedrooms_num}</p>}
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Beds Num.</label>
                     <input
-                      name="noBed"
-                      defaultValue={room?.beds_num}
+                      name="beds_num"
+                      type="number"
+                      defaultValue={room ? room.beds_num : state.inputs.beds_num}
                       placeholder="Number of Bed"
-                      required
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
+                    {state?.errors?.beds_num && <p className="text-red-500 mb-2 capitalize">{state.errors.beds_num}</p>}
                   </div>
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Bathrooms Num.</label>
                     <input
-                      name="noBath"
+                      name="bathrooms_num"
+                      type="number"
                       placeholder="Number of Bath"
-                      defaultValue={room?.bathrooms_num}
-                      required
+                      defaultValue={room ? room.bathrooms_num : state.inputs.bathrooms_num}
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
+                    {state?.errors?.bathrooms_num && <p className="text-red-500 mb-2 capitalize">{state.errors.bathrooms_num}</p>}
                   </div>
                 </div>
               </div>
@@ -233,8 +288,8 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                     }`}
                   >
                     <input
-                      type="file"
                       name="room_images"
+                      type="file"
                       className="absolute inset-0 opacity-0 w-full h-full cursor-pointer "
                       onChange={handleImageChange}
                       multiple
@@ -246,25 +301,23 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                   </label>
                 </div>
               </div>
+                  {state?.errors?.room_images && <p className="text-red-500 mb-2 capitalize">{state.errors.room_images}</p>}
             </div>
             {/* Room Pricing */}
             <div className="mt-10">
               <h1 className="text-xl pb-5"> Pricing</h1>
               <div className="flex items-center justify-center gap-2 border p-4 border-gray-400 rounded-2xl">
                 <input
-                  type="text"
-                  name="price"
-                  defaultValue={room?.room_price}
-                  required
+                  name="room_price"
+                  type="number"
+                  defaultValue={room ? room.room_price : state.inputs.room_price}
                   placeholder="Room price"
                   className="border outline-none rounded-2xl p-2 mt-2"
                 />
                 <span className="text-xl font-light capitalize">/night</span>
               </div>
+              {state?.errors?.room_price && <p className="text-red-500 mb-2 capitalize">{state.errors.room_price}</p>}
             </div>
-        {error && (
-          <div className="text-red-500 text-xl mt-10">{error.message}</div>
-        )}
           </div>
         </div>
         <button
