@@ -4,8 +4,8 @@ import { LuHeart } from "react-icons/lu";
 
 export default function CardItem({ room }: any) {
   return (
-    <>
-      <div className=" relative w-72 h-80 rounded-xl overflow-hidden">
+    <div className="max-w-sm">
+      <div className="relative w-72 h-80 rounded-xl overflow-hidden">
         <SaveButton roomId={room.id}>
           <LuHeart
             size={35}
@@ -26,8 +26,10 @@ export default function CardItem({ room }: any) {
         </h1>
         <p className="text-gray-700 capitalize">{room.address}</p>
       </div>
-      <span className="text-gray-900 font-semibold ml-1">${room.room_price}</span>{" "}
+      <span className="text-gray-900 font-semibold ml-1">
+        ${room.room_price}
+      </span>{" "}
       <span className="text-gray-600">/ Night</span>
-    </>
+    </div>
   );
 }

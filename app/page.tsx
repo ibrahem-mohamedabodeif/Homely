@@ -1,6 +1,6 @@
 import CardItem from "@/components/CardItem";
 import NavIcon from "@/components/navIcon";
-import { checkAvailability, getAllRooms, searchRooms } from "@/lib/functions";
+import { getAllRooms, searchRooms } from "@/lib/functions";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "./loading";
@@ -40,7 +40,7 @@ export default async function Home({ searchParams }: searchType) {
           There&apos;s no Rooms matching the filters
         </div>
       )}
-      <div className="mb-20 mx-5 md:mx-20 max-sm:mb-32 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-5 my-5">
+      <div className="mb-20 mx-11 md:mx-20 max-sm:mb-32 grid justify-center grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 gap-5 my-5">
         {filteredRooms?.map((room: any) => (
           <Link href={`/${room.id}`} key={room.id}>
             <Suspense fallback={<Loader />}>

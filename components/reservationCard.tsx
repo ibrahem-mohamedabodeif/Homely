@@ -20,7 +20,7 @@ export default function ReservationCard({ room }: any) {
     <>
       {pathName === "/account/homely-rooms/bookings" ? (
         <Link href={`/account/homely-rooms/bookings/${room.id}`}>
-          <div className="max-w-sm w-full md:w-fit md:max-w-full h-full flex flex-col md:flex-row items-center max-sm:mx-5 gap-2 border border-[#6e6e6e] p-3 rounded-2xl">
+          <div className=" max-w-xs md:w-fit md:max-w-full h-full flex flex-col md:flex-row items-center max-sm:mx-5 gap-2 border border-[#6e6e6e] p-3 rounded-2xl">
             <div className="flex flex-row md:flex-col items-center justify-center md:border-r md:border-[#6e6e6e] md:pr-2 h-full">
               <span className="text-xl text-[#F5556C]">
                 {formatDateRange(room.check_in).split(" ")[1]}

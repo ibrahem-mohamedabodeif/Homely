@@ -1,4 +1,5 @@
 import Loading from "@/app/loading";
+import BackBtn from "@/components/backBtn";
 import CardItem from "@/components/CardItem";
 import ShareBtn from "@/components/shareBtn";
 import { getHomelyRooms, getHostingNumber } from "@/lib/functions";
@@ -29,6 +30,7 @@ export default async function page({
     <div>
       <div className="flex flex-col md:flex-row items-start gap-10 md:gap-20 mt-5 border-b pb-10">
         {/* image and numbers */}
+        <BackBtn/>
         <div className="flex flex-col items-center justify-center w-full md:w-auto max-sm:border-b max-sm:pb-5">
           <div className=" flex flex-col items-center border border-transparent p-10 rounded-3xl shadow-2xl">
             <div className="relative w-36 h-36 rounded-full overflow-hidden">

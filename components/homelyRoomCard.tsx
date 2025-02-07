@@ -13,7 +13,6 @@ export default function HomelyRoomCard({ room }: any) {
     try {
        await deleteRoom(roomId);
         toast.success("Successfully deleted");
-        revalidatePath("/account/homely-rooms");
     } catch (error) {
       toast.error("An unexpected error occurred");
     }

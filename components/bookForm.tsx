@@ -3,12 +3,13 @@
 import { createReservation } from "@/lib/actions";
 import { bookingSchema } from "@/lib/schema";
 import { useUser } from "@clerk/nextjs";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function BookForm() {
   const { user } = useUser();
+  const router = useRouter();
   const [bookingData, setBookingData] = useState<any>({});
   const searchParams = useSearchParams();
   useEffect(() => {
@@ -26,9 +27,9 @@ export default function BookForm() {
 
   const initialState = {
     success: false,
-    message:"",
-    errors:{},
-    inputs:{
+    message: "",
+    errors: {},
+    inputs: {
       client_name: "",
       client_email: "",
       client_phone: "",
@@ -40,9 +41,9 @@ export default function BookForm() {
       nights: 0,
       guests_num: 0,
       total_price: 0,
-      user_id: ""
-    }
-  }
+      user_id: "",
+    },
+  };
   const [state, formAction] = useActionState(
     async (previousState: any, formData: FormData) => {
       const formValues = {
@@ -65,25 +66,29 @@ export default function BookForm() {
         result.error.errors.map((error) => {
           errorMap[error.path[0]] = error.message;
         });
+        toast.error("please entered a valid booking data");
         return {
           success: false,
           errors: errorMap,
           inputs: formValues,
-          message:"please entered a valid booking data"
-        }
+          message: "please entered a valid booking data",
+        };
       }
 
       const response = await createReservation(result.data);
-      if(!response.success) {
+      if (!response.success) {
         toast.error(response.message);
         return {
           success: false,
           errors: response.errors,
           inputs: formValues,
-          message:response.message
-        }
+          message: response.message,
+        };
       }
       toast.success(response.message);
+      setTimeout(() => {
+        router.push("/trips");
+      }, 5000);
       return response;
     },
     initialState
@@ -111,19 +116,28 @@ export default function BookForm() {
           <input
             name="fullName"
             placeholder="Your Name"
-            className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-2 w-full"
+            className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-2 w-full text-lg capitalize"
             type="text"
-            defaultValue={state.inputs.client_name}
+            defaultValue={user?.fullName ||state.inputs.client_name}
           />
-          {state.errors?.client_name && <p className="text-red-500 mb-2 capitalize">{state.errors.client_name}</p>}
+          {state.errors?.client_name && (
+            <p className="text-red-500 mb-2 capitalize">
+              {state.errors.client_name}
+            </p>
+          )}
           <input
             name="email"
             placeholder="Your Email"
-            className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-2 w-full"
+            className="h-12 border border-[#e6e6e6] rounded-md p-2 mb-2 w-full text-lg text-slate-800 bg-slate-300"
             type="email"
-            defaultValue={state.inputs.client_email}
+            value={user?.emailAddresses[0]?.emailAddress}
+            readOnly
           />
-          {state.errors?.client_email && <p className="text-red-500 mb-2 capitalize">{state.errors.client_email}</p>}
+          {state.errors?.client_email && (
+            <p className="text-red-500 mb-2 capitalize">
+              {state.errors.client_email}
+            </p>
+          )}
           <input
             name="number"
             placeholder="Phone Number"
@@ -131,7 +145,11 @@ export default function BookForm() {
             type="text"
             defaultValue={state.inputs.client_phone}
           />
-          {state.errors?.client_phone && <p className="text-red-500 mb-2 capitalize">{state.errors.client_phone}</p>}
+          {state.errors?.client_phone && (
+            <p className="text-red-500 mb-2 capitalize">
+              {state.errors.client_phone}
+            </p>
+          )}
           <input
             name="idNumber"
             placeholder="Identity Number"
@@ -139,7 +157,11 @@ export default function BookForm() {
             type="text"
             defaultValue={state.inputs.client_idNum}
           />
-          {state.errors?.client_idNum && <p className="text-red-500 mb-2 capitalize">{state.errors.client_idNum}</p>}
+          {state.errors?.client_idNum && (
+            <p className="text-red-500 mb-2 capitalize">
+              {state.errors.client_idNum}
+            </p>
+          )}
           <textarea
             name="notes"
             placeholder="Notes"

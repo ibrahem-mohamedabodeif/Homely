@@ -3,18 +3,24 @@ import { addRoom, updateRoom } from "@/lib/actions";
 import { addedRoomSchema, updatedRoomSchema } from "@/lib/schema";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { CiCamera } from "react-icons/ci";
 
 export default function BecomeahostForm({ room }: { room?: any }) {
   const { user } = useUser();
+  const router = useRouter();
+  const [imagePreviews, setImagePreviews] = useState<string[]>(
+    room?.room_images || []
+  );
   const initialState = {
-    success : false,
-    errors :{},
-    message:"",
-    inputs:{}
-  }
+    success: false,
+    errors: {},
+    message: "",
+    inputs: {},
+  };
   const [state, formAction] = useActionState(
     async (previousState: any, formData: FormData): Promise<any> => {
       const formValues = {
@@ -30,62 +36,73 @@ export default function BecomeahostForm({ room }: { room?: any }) {
         beds_num: Number(formData.get("beds_num")) as number,
         bathrooms_num: Number(formData.get("bathrooms_num")) as number,
         room_price: Number(formData.get("room_price")) as number,
-         room_images: (formData.getAll("room_images") as File[]) ,
-      }
+        room_images: formData.getAll("room_images") as File[],
+      };
 
       const result = room
-      ? updatedRoomSchema.safeParse({ ...formValues, id: room.id })
-      : addedRoomSchema.safeParse(formValues);
+        ? updatedRoomSchema.safeParse({ ...formValues, id: room.id })
+        : addedRoomSchema.safeParse(formValues);
 
-    if (!result.success) {
-      const errorMap: Record<string, string> = {};
-      result.error.errors.forEach((error) => {
-        errorMap[error.path[0]] = error.message;
-      });
-      return {
-        success: false,
-        errors: errorMap,
-        inputs: formValues,
-        message: "Please enter valid place data.",
-      };
-    }
-
-    try {
-      const response = room
-        ? await updateRoom({ ...result.data, id: room.id })
-        : await addRoom({ ...result.data, room_images: result.data.room_images || [] });
-
-      if (response && !response.success) {
+      if (!result.success) {
+        const errorMap: Record<string, string> = {};
+        result.error.errors.forEach((error) => {
+          errorMap[error.path[0]] = error.message;
+        });
+        toast.error("Please enter valid place data.");
         return {
           success: false,
-          errors: response.errors,
+          errors: errorMap,
           inputs: formValues,
-          message: response.message,
+          message: "Please enter valid place data.",
         };
       }
-      return response;
-    } catch (error) {
-      return {
-        success: false,
-        message: room ? "Failed to update room." : "Failed to add room.",
-        errors: {},
-        inputs: formValues,
-      };
-    }
-  },
-  initialState
-  );
 
-  const [imagePreviews, setImagePreviews] = useState<string[]>(
-    room?.room_images || []
+      try {
+        const response = room
+          ? await updateRoom({ ...result.data, id: room.id })
+          : await addRoom({
+              ...result.data,
+              room_images: result.data.room_images || [],
+            });
+
+        if (response && !response.success) {
+          toast.error(response.message);
+          return {
+            success: false,
+            inputs: formValues,
+            message: response.message,
+          };
+        }
+        toast.success(response.message);
+        setTimeout(() => router.push("/account/homely-rooms"),3000)
+        return response;
+      } catch (error) {
+        toast.error(
+          room
+            ? "Failed to update room, try again later."
+            : "Failed to add room, try again later."
+        );
+        return {
+          success: false,
+          message: room
+            ? "Failed to update room, try again later."
+            : "Failed to add room, try again later.",
+          errors: error,
+          inputs: formValues,
+        };
+      }
+    },
+    initialState
   );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const fileArray = Array.from(files);
-      const newImagePreviews = fileArray.map((file) => URL.createObjectURL(file)); 
-      setImagePreviews((prev) => [...prev, ...newImagePreviews]); 
+      const newImagePreviews = fileArray.map((file) =>
+        URL.createObjectURL(file)
+      );
+      setImagePreviews((prev) => [...prev, ...newImagePreviews]);
     }
   };
 
@@ -97,14 +114,8 @@ export default function BecomeahostForm({ room }: { room?: any }) {
 
   return (
     <div className="mx-4 md:mx-10">
-        {state?.message && (
-        <div className={`my-10 -mt-5 text-xl ${state.success ? "text-green-500" : "text-red-500"}`}>
-          {state.message}
-        </div>
-      )}
       <form action={formAction}>
-      {room && <input type="hidden" name="roomId" value={room.id} />}
-      <input type="hidden" name="userId" value={user?.id ||""} />
+        <input type="hidden" name="userId" value={user?.id || ""} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Room Details */}
           <div className="">
@@ -116,11 +127,17 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                   <input
                     name="room_name"
                     type="text"
-                    defaultValue={room ? room.room_name : state.inputs.room_name}
+                    defaultValue={
+                      room ? room.room_name : state.inputs.room_name
+                    }
                     placeholder="Place title"
                     className="border outline-none rounded-2xl p-2 mt-2"
                   />
-                  {state?.errors?.room_name && <p className="text-red-500 mb-2 capitalize">{state.errors.room_name}</p>}
+                  {state?.errors?.room_name && (
+                    <p className="text-red-500 mb-2 capitalize">
+                      {state.errors.room_name}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <label className="font-light pl-2"> Place location </label>
@@ -129,10 +146,16 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       <input
                         name="country"
                         placeholder="Country"
-                        defaultValue={room ? room.country : state.inputs.country}
+                        defaultValue={
+                          room ? room.country : state.inputs.country
+                        }
                         className="outline-none md:border-r md:mr-3 md:pr-20 mb-2 md:w-1/2"
                       />
-                    {state?.errors?.country && <p className="text-red-500 mb-2 capitalize">{state.errors.country}</p>}
+                      {state?.errors?.country && (
+                        <p className="text-red-500 mb-2 capitalize">
+                          {state.errors.country}
+                        </p>
+                      )}
 
                       <input
                         name="city"
@@ -140,7 +163,11 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                         placeholder="City"
                         className="outline-none md:w-1/2 mb-2"
                       />
-                  {state?.errors?.city && <p className="text-red-500 mb-2 capitalize">{state.errors.city}</p>}
+                      {state?.errors?.city && (
+                        <p className="text-red-500 mb-2 capitalize">
+                          {state.errors.city}
+                        </p>
+                      )}
                     </div>
                     <input
                       name="address"
@@ -148,18 +175,30 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       placeholder="Address"
                       className="border outline-none rounded-2xl p-2 mt-2 col-span-1 md:col-span-2"
                     />
-                    {state?.errors?.address && <p className="text-red-500 mb-2 capitalize">{state.errors.address}</p>}
+                    {state?.errors?.address && (
+                      <p className="text-red-500 mb-2 capitalize">
+                        {state.errors.address}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col">
                   <label className="font-light pl-2">Describe your place</label>
                   <textarea
                     name="room_description"
-                    defaultValue={room ? room.room_description : state.inputs.room_description}
+                    defaultValue={
+                      room
+                        ? room.room_description
+                        : state.inputs.room_description
+                    }
                     placeholder="Describe your place to help clients know where they will be"
                     className="border outline-none rounded-2xl p-2 mt-2 resize-none h-40"
                   />
-                  {state?.errors?.room_description && <p className="text-red-500 mb-2 capitalize">{state.errors.room_description}</p>}
+                  {state?.errors?.room_description && (
+                    <p className="text-red-500 mb-2 capitalize">
+                      {state.errors.room_description}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* category , Numbers*/}
@@ -168,7 +207,9 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                   <label className="font-light pl-2"> Category</label>
                   <select
                     name="room_category"
-                    defaultValue={room ? room.room_category : state.inputs.room_category}
+                    defaultValue={
+                      room ? room.room_category : state.inputs.room_category
+                    }
                     className="border outline-none rounded-2xl p-2 mt-2 font-light capitalize"
                   >
                     <option value="room" key="room">
@@ -193,7 +234,11 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       luxe
                     </option>
                   </select>
-                  {state?.errors?.room_category && <p className="text-red-500 mb-2 capitalize">{state.errors.room_category}</p>}
+                  {state?.errors?.room_category && (
+                    <p className="text-red-500 mb-2 capitalize">
+                      {state.errors.room_category}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                   <div className="flex flex-col md:w-1/2">
@@ -202,10 +247,16 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       name="guests_num"
                       type="number"
                       placeholder="Number of Guests"
-                      defaultValue={room ? room.guests_num : state.inputs.guests_num}
+                      defaultValue={
+                        room ? room.guests_num : state.inputs.guests_num
+                      }
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
-                    {state?.errors?.guests_num && <p className="text-red-500 mb-2 capitalize">{state.errors.guests_num}</p>}
+                    {state?.errors?.guests_num && (
+                      <p className="text-red-500 mb-2 capitalize">
+                        {state.errors.guests_num}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Bedrooms Num.</label>
@@ -213,10 +264,16 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       name="bedrooms_num"
                       type="number"
                       placeholder="Number of Bedrooms"
-                      defaultValue={room ? room.bedrooms_num : state.inputs.bedrooms_num}
+                      defaultValue={
+                        room ? room.bedrooms_num : state.inputs.bedrooms_num
+                      }
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
-                    {state?.errors?.bedrooms_num && <p className="text-red-500 mb-2 capitalize">{state.errors.bedrooms_num}</p>}
+                    {state?.errors?.bedrooms_num && (
+                      <p className="text-red-500 mb-2 capitalize">
+                        {state.errors.bedrooms_num}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row justify-between gap-2">
@@ -225,11 +282,17 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                     <input
                       name="beds_num"
                       type="number"
-                      defaultValue={room ? room.beds_num : state.inputs.beds_num}
+                      defaultValue={
+                        room ? room.beds_num : state.inputs.beds_num
+                      }
                       placeholder="Number of Bed"
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
-                    {state?.errors?.beds_num && <p className="text-red-500 mb-2 capitalize">{state.errors.beds_num}</p>}
+                    {state?.errors?.beds_num && (
+                      <p className="text-red-500 mb-2 capitalize">
+                        {state.errors.beds_num}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col md:w-1/2">
                     <label className="font-light pl-2"> Bathrooms Num.</label>
@@ -237,10 +300,16 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                       name="bathrooms_num"
                       type="number"
                       placeholder="Number of Bath"
-                      defaultValue={room ? room.bathrooms_num : state.inputs.bathrooms_num}
+                      defaultValue={
+                        room ? room.bathrooms_num : state.inputs.bathrooms_num
+                      }
                       className="border outline-none rounded-2xl p-2 mt-2"
                     />
-                    {state?.errors?.bathrooms_num && <p className="text-red-500 mb-2 capitalize">{state.errors.bathrooms_num}</p>}
+                    {state?.errors?.bathrooms_num && (
+                      <p className="text-red-500 mb-2 capitalize">
+                        {state.errors.bathrooms_num}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -301,7 +370,11 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                   </label>
                 </div>
               </div>
-                  {state?.errors?.room_images && <p className="text-red-500 mb-2 capitalize">{state.errors.room_images}</p>}
+              {state?.errors?.room_images && (
+                <p className="text-red-500 mb-2 capitalize">
+                  {state.errors.room_images}
+                </p>
+              )}
             </div>
             {/* Room Pricing */}
             <div className="mt-10">
@@ -310,13 +383,19 @@ export default function BecomeahostForm({ room }: { room?: any }) {
                 <input
                   name="room_price"
                   type="number"
-                  defaultValue={room ? room.room_price : state.inputs.room_price}
+                  defaultValue={
+                    room ? room.room_price : state.inputs.room_price
+                  }
                   placeholder="Room price"
                   className="border outline-none rounded-2xl p-2 mt-2"
                 />
                 <span className="text-xl font-light capitalize">/night</span>
               </div>
-              {state?.errors?.room_price && <p className="text-red-500 mb-2 capitalize">{state.errors.room_price}</p>}
+              {state?.errors?.room_price && (
+                <p className="text-red-500 mb-2 capitalize">
+                  {state.errors.room_price}
+                </p>
+              )}
             </div>
           </div>
         </div>
