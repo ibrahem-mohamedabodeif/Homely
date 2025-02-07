@@ -15,6 +15,7 @@ export default function BecomeahostForm({ room }: { room?: any }) {
   const [imagePreviews, setImagePreviews] = useState<string[]>(
     room?.room_images || []
   );
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const initialState = {
     success: false,
     errors: {},
@@ -36,7 +37,7 @@ export default function BecomeahostForm({ room }: { room?: any }) {
         beds_num: Number(formData.get("beds_num")) as number,
         bathrooms_num: Number(formData.get("bathrooms_num")) as number,
         room_price: Number(formData.get("room_price")) as number,
-        room_images: formData.getAll("room_images") as File[],
+        room_images: imageFiles,
       };
 
       const result = room
@@ -99,17 +100,23 @@ export default function BecomeahostForm({ room }: { room?: any }) {
     const files = e.target.files;
     if (files) {
       const fileArray = Array.from(files);
-      const newImagePreviews = fileArray.map((file) =>
-        URL.createObjectURL(file)
-      );
+      const newImageFiles = fileArray.filter((file) => {
+        return !imageFiles.some((existingFile) => existingFile.name === file.name && existingFile.size === file.size);
+      });
+  
+      const newImagePreviews = newImageFiles.map((file) => URL.createObjectURL(file));
       setImagePreviews((prev) => [...prev, ...newImagePreviews]);
+      setImageFiles((prev) => [...prev, ...newImageFiles]);
     }
   };
 
   const handleRemoveImage = (index: number) => {
     const newImagePreviews = [...imagePreviews];
+    const newImageFiles = [...imageFiles];
     newImagePreviews.splice(index, 1);
+    newImageFiles.splice(index, 1);
     setImagePreviews(newImagePreviews);
+    setImageFiles(newImageFiles);
   };
 
   return (
